@@ -1,0 +1,486 @@
+generator client {
+  provider        = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model guests {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  active    Boolean   @default(true)
+  archive   Boolean   @default(false)
+  creator   String?   @db.ObjectId
+  matricule String
+  password  String
+  username  String
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+}
+
+type TpeProcessedCollaboratorsAttestationRib {
+  banque String
+  rib    String
+}
+
+type TpeProcessedCollaboratorsDiplome {
+  annee      String
+  diplome    String
+  universite String
+}
+
+type TpeProcessedCollaboratorsFicheAntr {
+  intitule String
+}
+
+type TpeProcessedCollaboratorsFicheRadio {
+  ficheRadio String
+}
+
+type TpeProcessedCollaboratorsUserInfos {
+  adresse         String
+  birth_place     String
+  birthday        DateTime? @db.Date
+  city            String
+  cni             String
+  expiration_date DateTime? @db.Date
+  firstname       String
+  gender          String?
+  lastname        String
+  nationality     String
+  ref             String
+}
+
+type TpeProcessedInfosCompany {
+  /// Field referred in an index, but found no data to define the type.
+  id_fiscale Json?
+}
+
+model bankchecks {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  agent     String   @db.ObjectId
+  archive   Boolean
+  bank      String   @db.ObjectId
+  comment   String
+  company   String   @db.ObjectId
+  createdAt DateTime @db.Date
+  date      DateTime @db.Date
+  document  String   @db.ObjectId
+  journal   String
+  montant   Int
+  numero    String
+  status    String
+  tier      String   @db.ObjectId
+  updatedAt DateTime @db.Date
+  user      String   @db.ObjectId
+}
+
+model cpu_folders {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  createdAt DateTime @db.Date
+  status    String
+  step      Int
+  updatedAt DateTime @db.Date
+  user      String   @db.ObjectId
+}
+
+model cpu_identity_documents {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+}
+
+model credentials {
+  id    String @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  email Json?  @unique(map: "email_1")
+  /// Field referred in an index, but found no data to define the type.
+  phone Json?  @unique(map: "phone_1")
+}
+
+model lettragemodels {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  v              Int      @map("__v")
+  agent          String   @db.ObjectId
+  archive        Boolean
+  createdAt      DateTime @db.Date
+  idEcritures    String[] @db.ObjectId
+  idTransactions String[] @db.ObjectId
+  let            String
+  soldCumule     String
+  updatedAt      DateTime @db.Date
+}
+
+model personaljournalmodels {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  agent     String   @db.ObjectId
+  company   String   @db.ObjectId
+  createdAt DateTime @db.Date
+  name      String
+  nature    String
+  updatedAt DateTime @db.Date
+  user      String   @db.ObjectId
+}
+
+model role_accesses {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int?      @map("__v")
+  active    Boolean?
+  archive   Boolean
+  createdAt DateTime? @db.Date
+  creator   String    @db.ObjectId
+  guest     String    @db.ObjectId
+  links     String[]
+  role      String
+  updatedAt DateTime? @db.Date
+}
+
+model roles_companies {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  company     String   @db.ObjectId
+  createdAt   DateTime @db.Date
+  description String
+  img         String
+  status      String
+  title       String
+  updatedAt   DateTime @db.Date
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  users       Json?
+}
+
+model tpe_banks {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  account   String?
+  agent     String?  @db.ObjectId
+  comment   String?
+  company   String   @db.ObjectId
+  createdAt DateTime @db.Date
+  name      String
+  numero    String
+  status    String
+  updatedAt DateTime @db.Date
+  url       String
+  user      String   @db.ObjectId
+}
+
+model tpe_collaborator_docs {
+  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  v            Int      @map("__v")
+  archive      Boolean
+  collaborator String   @db.ObjectId
+  comment      String?
+  createdAt    DateTime @db.Date
+  motif        String?
+  status       String
+  type         String
+  updatedAt    DateTime @db.Date
+  url          String
+  user         String   @db.ObjectId
+}
+
+model tpe_collaborator_folders {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  agent     String?  @db.ObjectId
+  createdAt DateTime @db.Date
+  ref       String
+  status    String
+  updatedAt DateTime @db.Date
+  user      String   @db.ObjectId
+}
+
+model tpe_companies {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  v                 Int      @map("__v")
+  address           String
+  agent             String   @db.ObjectId
+  city              String
+  cnss_number       String?
+  company_common_id String?
+  country           String
+  createdAt         DateTime @db.Date
+  id_fiscale        String?  @unique(map: "id_fiscale_1")
+  name              String
+  photo             String?
+  rc                String
+  tax_number        String?
+  updatedAt         DateTime @db.Date
+  user              String   @db.ObjectId
+}
+
+model tpe_demands {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  createdAt DateTime @db.Date
+  status    String
+  type      String
+  updatedAt DateTime @db.Date
+  user      String   @db.ObjectId
+}
+
+model tpe_ecritures {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  agent     String   @db.ObjectId
+  archive   Boolean
+  company   String?  @db.ObjectId
+  createdAt DateTime @db.Date
+  credit    String
+  debit     String
+  facture   String   @db.ObjectId
+  ht        String
+  journal   String?
+  lettred   Boolean
+  libelle   String
+  ttc       String
+  tva       String
+  updatedAt DateTime @db.Date
+  user      String?  @db.ObjectId
+}
+
+model tpe_factures {
+  id         String   @id @default(auto()) @map("_id") @db.ObjectId
+  v          Int      @map("__v")
+  agent      String   @db.ObjectId
+  archive    Boolean
+  comment    String
+  company    String   @db.ObjectId
+  createdAt  DateTime @db.Date
+  credit     String
+  date       DateTime @db.Date
+  debit      String
+  devise     String
+  document   String   @db.ObjectId
+  echeance   DateTime @db.Date
+  ht         String
+  journal    String
+  nPieces    String
+  /// Could not determine type: the field only had null or empty values in the sample set.
+  oldFacture Json?
+  tier       String   @db.ObjectId
+  /// Multiple data types found: Float: 71.4%, Int: 28.6% out of 7 sampled entries
+  total      Json
+  ttc        String
+  tva        String
+  updatedAt  DateTime @db.Date
+  user       String   @db.ObjectId
+}
+
+model tpe_finance_docs {
+  id             String   @id @default(auto()) @map("_id") @db.ObjectId
+  v              Int      @map("__v")
+  agent          String?  @db.ObjectId
+  archive        Boolean
+  client_comment String
+  comment        String?
+  company        String   @db.ObjectId
+  createdAt      DateTime @db.Date
+  name           String
+  phase          Int
+  status         String
+  type           String?
+  updatedAt      DateTime @db.Date
+  url            String
+  user           String   @db.ObjectId
+}
+
+model tpe_folders {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  agent     String   @db.ObjectId
+  createdAt DateTime @db.Date
+  status    String
+  updatedAt DateTime @db.Date
+  user      String   @db.ObjectId
+}
+
+model tpe_identity_documents {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  archive   Boolean
+  comment   String?
+  createdAt DateTime @db.Date
+  motif     String?
+  status    String
+  type      String
+  updatedAt DateTime @db.Date
+  url       String
+  user      String   @db.ObjectId
+}
+
+model tpe_journals {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  createdAt DateTime @db.Date
+  name      String
+  updatedAt DateTime @db.Date
+  value     String
+}
+
+model tpe_plan_comptables {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  createdAt DateTime @db.Date
+  label     String
+  updatedAt DateTime @db.Date
+  value     String
+}
+
+model tpe_processed_collaborators {
+  id             String                                  @id @default(auto()) @map("_id") @db.ObjectId
+  v              Int                                     @map("__v")
+  agent          String                                  @db.ObjectId
+  attestationRIB TpeProcessedCollaboratorsAttestationRib
+  company        String?                                 @db.ObjectId
+  createdAt      DateTime                                @db.Date
+  diplome        TpeProcessedCollaboratorsDiplome
+  ficheAntr      TpeProcessedCollaboratorsFicheAntr
+  ficheRadio     TpeProcessedCollaboratorsFicheRadio
+  updatedAt      DateTime                                @db.Date
+  user           String                                  @db.ObjectId
+  user_infos     TpeProcessedCollaboratorsUserInfos
+}
+
+model tpe_processed_infos {
+  id      String                    @id @default(auto()) @map("_id") @db.ObjectId
+  /// Field referred in an index, but found no data to define the type.
+  company TpeProcessedInfosCompany?
+
+  @@unique([company.id_fiscale], map: "company.id_fiscale_1")
+}
+
+model tpe_tiers {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  activity  String
+  adresse   String
+  agent     String   @db.ObjectId
+  company   String   @db.ObjectId
+  createdAt DateTime @db.Date
+  email     String
+  name      String
+  phone     String
+  ref       String
+  updatedAt DateTime @db.Date
+  user      String   @db.ObjectId
+}
+
+model tpe_transactions {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int      @map("__v")
+  agent         String   @db.ObjectId
+  archive       Boolean
+  company       String   @db.ObjectId
+  compte_bank   String
+  createdAt     DateTime @db.Date
+  credit        String
+  date          String
+  debit         String
+  document      String   @db.ObjectId
+  lettred       Boolean
+  rapprochement String
+  ref           String
+  updatedAt     DateTime @db.Date
+  user          String   @db.ObjectId
+}
+
+model tpe_update_documents {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  v         Int      @map("__v")
+  archive   Boolean
+  createdAt DateTime @db.Date
+  demand    String   @db.ObjectId
+  status    String
+  type      String
+  updatedAt DateTime @db.Date
+  url       String
+  user      String   @db.ObjectId
+}
+
+model tpe_user_infos {
+  id              String   @id @default(auto()) @map("_id") @db.ObjectId
+  v               Int      @map("__v")
+  adresse         String
+  agent           String   @db.ObjectId
+  birth_place     String
+  birthday        DateTime @db.Date
+  city            String
+  cni             String
+  createdAt       DateTime @db.Date
+  expiration_date DateTime @db.Date
+  firstname       String
+  gender          String
+  lastname        String
+  nationality     String
+  phone           String
+  ref             String
+  updatedAt       DateTime @db.Date
+  user            String   @db.ObjectId
+}
+
+model tpepointages {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  v             Int      @map("__v")
+  agent         String   @db.ObjectId
+  archive       Boolean
+  bankCheckId   String   @db.ObjectId
+  createdAt     DateTime @db.Date
+  transactionId String[] @db.ObjectId
+  updatedAt     DateTime @db.Date
+}
+
+model user_collaborators {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  active      Boolean
+  archive     Boolean
+  company     String?  @db.ObjectId
+  country     String
+  createdAt   DateTime @db.Date
+  matricule   String
+  regime      String
+  role        String
+  signupStage Int
+  updatedAt   DateTime @db.Date
+  user        String   @db.ObjectId
+  user_infos  String   @db.ObjectId
+}
+
+model users {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  v           Int      @map("__v")
+  active      Boolean
+  archive     Boolean
+  company     String?  @db.ObjectId
+  country     String
+  createdAt   DateTime @db.Date
+  email       String
+  matricule   String
+  password    String
+  phone       String   @unique(map: "phone_1")
+  photo       String?
+  ref         String
+  regime      String
+  role        String
+  signupStage Int
+  updatedAt   DateTime @db.Date
+}
+
+model verifycodes {
+  id                String   @id @default(auto()) @map("_id") @db.ObjectId
+  v                 Int      @map("__v")
+  active            Boolean
+  code              String
+  createdAt         DateTime @db.Date
+  type              String
+  type_confirmation String
+  updatedAt         DateTime @db.Date
+  user              String   @db.ObjectId
+  verified          Boolean
+}
