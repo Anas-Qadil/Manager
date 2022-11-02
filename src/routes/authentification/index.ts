@@ -5,11 +5,11 @@ import "../../configs/passport";
 import passport from "passport"
 
 const passportLocalSignIn  = passport.authenticate("localSignIn", { session: false });
-
-// set up router
+const passportJWTSignIn    = passport.authenticate("jwt", { session: false });
 const router = express.Router();
 
 // set up routes
-router.post('/sign-in', passportLocalSignIn , signInMiddleware, signInController);
+router.post('/sign-in', passportLocalSignIn, signInMiddleware, signInController);
+router.post("/authorize", passportJWTSignIn, signInMiddleware, signInController);
 
 export default router;

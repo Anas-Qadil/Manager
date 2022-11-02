@@ -6,8 +6,15 @@ const isUserExist = async (username: string) => {
   const user = await prisma.guests.findFirst({
     where: {
       username: username,
-      archive: false
-    }
+      archive: false,
+      active: true
+    },
+    select: {
+      id: true,
+      password: true,
+      matricule: true,
+      username: true,
+    },
   });
   return (user);
 }
@@ -26,11 +33,8 @@ interface IToken {
 
 const generateToken = (user: any): IToken => {
   const secretKey = process.env.JWT_SECRET;
-
   if (!secretKey) return ({ error: 1, token: "" });
-  
-  const token = jwt.sign({ id: user.id }, secretKey, { expiresIn: "30d" });
-  // return (token);
+  const token = jwt.sign({ id: user.id, username: user.username }, secretKey, { expiresIn: "30d" });
   return ({ error: 0, token: token });
 }
 

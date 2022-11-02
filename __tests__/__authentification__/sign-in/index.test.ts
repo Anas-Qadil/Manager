@@ -12,7 +12,7 @@ describe("test invalid credentials", () => {
         let result = ' ';
         const charactersLength = characters.length;
         for ( let i = 0; i < length; i++ ) {
-            result += characters.charAt(Math.floor(Math.random() * charactersLength));
+          result += characters.charAt(Math.floor(Math.random() * charactersLength));
         }
         return (result);
     }
@@ -26,12 +26,12 @@ describe("test invalid credentials", () => {
     const response = await request(server)
                     .post("/api/auth/sign-in")
                     .send({ username, password });
+
     if (response.statusCode === 400) {
       expect(response.statusCode).toBe(400);
     } else if (response.statusCode === 404) {
       expect(response.statusCode).toBe(404);
     }
-
   });
 });
 

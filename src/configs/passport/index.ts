@@ -5,11 +5,15 @@ import { isCredentialsValid } from "./passport.utils";
 import { isUserExist, comparePassword } from "./passport.service";
 
 passport.use(new JwtStrategy({
-	jwtFromRequest: ExtractJwt.fromHeader('authorization'),
-	secretOrKey: "process.env.JWT_SECRET"
+	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+	secretOrKey: process.env.JWT_SECRET
   }, async (payload, done) => {
     try {
-      console.log("passport payload " + payload);
+      const user = await isUserExist(payload.username);
+      if (!user) {
+        return done(null, { error: { code: 404, message: "account not found or disabled" } });
+      }
+      return done(null, user);
     } catch (e: any) {
       done(e, false)
     }
