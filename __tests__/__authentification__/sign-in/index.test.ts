@@ -49,3 +49,16 @@ describe("test valid credentials", () => {
     expect(response.body).toHaveProperty("user");
   });
 });
+
+// test for undefined credentials
+describe("test undefined credentials", () => {
+  test("it should return 400", async () => {
+    const username = undefined;
+    const password = undefined;
+
+    const response = await request(server)
+                    .post("/api/auth/sign-in")
+                    .send({ username, password });
+    expect(response.statusCode).toBe(400);
+  });
+});
