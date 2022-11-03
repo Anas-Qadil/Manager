@@ -8,42 +8,50 @@ datasource db {
 }
 
 model guests {
-  id        String    @id @default(auto()) @map("_id") @db.ObjectId
-  active    Boolean   @default(true)
-  archive   Boolean   @default(false)
-  creatorId String?   @db.ObjectId
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  active    Boolean  @default(true)
+  archive   Boolean  @default(false)
+  creatorId String?  @db.ObjectId
   matricule String
   password  String
-  username  String
+  username  String   @unique
+  roles     String[] @db.ObjectId
+
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
-  roles     String[]  @db.ObjectId
 
-  Role         Role[]      @relation(fields: [roles], references: [id])
-  creator      guests?     @relation("guestCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  guests       guests[]    @relation("guestCreator")
+  Role    Roles[]  @relation(fields: [roles], references: [id])
+  creator guests?  @relation("guestCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  guests  guests[] @relation("guestCreator")
 }
 
-model Role {
+model Roles {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
   code          String
   permissionIDs String[] @db.ObjectId
-  guestIDs    String[] @db.ObjectId
+  guestIDs      String[] @db.ObjectId
 
-  permissions Permission[] @relation(fields: [permissionIDs], references: [id])
-  accounts    guests[]     @relation(fields: [guestIDs], references: [id])
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  Permissions Permissions[] @relation(fields: [permissionIDs], references: [id])
+  guests      guests[]      @relation(fields: [guestIDs], references: [id])
 
   @@map("guest_roles")
 }
 
-model Permission {
+model Permissions {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   accessLevel access[] @default([READ])
   description String?
-  
-  roleIDs     String[] @db.ObjectId
-  roles    Role[]   @relation(fields: [roleIDs], references: [id])
+  archive     Boolean  @default(false)
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+  roleIDs   String[]  @db.ObjectId
+  roles     Roles[]   @relation(fields: [roleIDs], references: [id])
+
   @@map("guest_permissions")
 }
 

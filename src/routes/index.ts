@@ -2,6 +2,7 @@ import express, { Express } from 'express';
 import auth from './authentification/index'
 import permissions from './authorization/permissions'
 import roleAccess from './authorization/role_access'
+import guests from './guest/index'
 
 const router = express.Router();
 
@@ -9,10 +10,13 @@ const router = express.Router();
 router.use('/api/auth', auth);
 
 // handle all permmision related routes
-router.use("/api/permissions", permissions);
+router.use("/api/authorization/permissions", permissions);
 
 // handle all role access related routes
-router.use("/api/role-access", roleAccess);
+router.use("/api/authorization/role-access", roleAccess);
+
+// handle all guest related routes
+router.use("/api/guest", guests);
 
 // error handling middleware
 router.use((_, res) => {
