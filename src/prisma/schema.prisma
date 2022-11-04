@@ -20,22 +20,24 @@ model guests {
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  Role    Roles[]  @relation(fields: [roles], references: [id])
   creator guests?  @relation("guestCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
   guests  guests[] @relation("guestCreator")
+  Role    Roles[]  @relation()
 }
 
 model Roles {
   id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  code          String
+  name          String
   permissionIDs String[] @db.ObjectId
-  guestIDs      String[] @db.ObjectId
+  guestID      String @db.ObjectId
+  archive       Boolean  @default(false)
+  creatorID     String?  @db.ObjectId
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
   Permissions Permissions[] @relation(fields: [permissionIDs], references: [id])
-  guests      guests[]      @relation(fields: [guestIDs], references: [id])
+  guests      guests      @relation(fields: [guestID], references: [id])
 
   @@map("guest_roles")
 }
@@ -43,7 +45,7 @@ model Roles {
 model Permissions {
   id          String   @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  accessLevel access[] @default([READ])
+  // accessLevel access[] @default([READ])
   description String?
   archive     Boolean  @default(false)
 
@@ -55,9 +57,9 @@ model Permissions {
   @@map("guest_permissions")
 }
 
-enum access {
-  READ
-  WRITE
-  DELETE
-  UPDATE
-}
+// enum access {
+//   READ
+//   WRITE
+//   DELETE
+//   UPDATE
+// }

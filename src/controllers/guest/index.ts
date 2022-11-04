@@ -15,6 +15,11 @@ const getGuest = async (req: Request, res: Response) => {
 const getGuestByID = async (req: Request, res: Response) => {
   try {
     const guest = await new GuestService().getGuestByID(req.params.id);
+    if (!guest) {
+      return res.status(404).send({
+        message: "guest not found",
+      });
+    }
     res.status(200).send({
       message: "guest found",
       guest: guest.guest,
@@ -29,6 +34,12 @@ const getGuestByID = async (req: Request, res: Response) => {
 const getGuests = async (req: Request, res: Response) => {
   try {
     const guests = await new GuestService().getGuests();
+    if (!guests) {
+      return res.status(404).send({
+        message: "guests not found",
+      });
+    }
+    
     res.status(200).send({
       message: "guests found",
       guests: guests.guest,

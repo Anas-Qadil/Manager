@@ -7,16 +7,16 @@ import guests from './guest/index'
 const router = express.Router();
 
 // handle all authentification related routes
-router.use('/api/auth', auth);
+router.use('/api/v1/auth', auth);
 
 // handle all permmision related routes
-router.use("/api/authorization/permissions", permissions);
+router.use("/api/v1/permissions", permissions);
 
 // handle all role access related routes
-router.use("/api/authorization/role-access", roleAccess);
+router.use("/api/v1/role-access", roleAccess);
 
 // handle all guest related routes
-router.use("/api/guest", guests);
+router.use("/api/v1/guest", guests);
 
 // error handling middleware
 router.use((_, res) => {

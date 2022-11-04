@@ -24,7 +24,7 @@ describe("test invalid credentials", () => {
     const username = generateString(length);
     const password = generateString(length);
     const response = await request(server)
-                    .post("/api/auth/sign-in")
+                    .post("/api/v1/auth/sign-in")
                     .send({ username, password });
 
     if (response.statusCode === 400) {
@@ -42,7 +42,7 @@ describe("test valid credentials", () => {
     const password = "agent123";
 
     const response = await request(server)
-                    .post("/api/auth/sign-in")
+                    .post("/api/v1/auth/sign-in")
                     .send({ username, password });
     expect(response.statusCode).toBe(200);
     expect(response.body).toHaveProperty("token");
@@ -57,7 +57,7 @@ describe("test undefined credentials", () => {
     const password = undefined;
 
     const response = await request(server)
-                    .post("/api/auth/sign-in")
+                    .post("/api/v1/auth/sign-in")
                     .send({ username, password });
     expect(response.statusCode).toBe(400);
   });
