@@ -4,7 +4,6 @@ const createGuestRole = async (req: Request, res: Response, next: NextFunction) 
   try {
     const user: any = req.user;
     const data: any = req.body;
-
     data.assignedBy = user.id;
     next();
   } catch (err) {
@@ -16,7 +15,6 @@ const createGuestRole = async (req: Request, res: Response, next: NextFunction) 
 
 const updateGuestRole = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("updateGuestRole");
     next();
   } catch (err) {
     res.status(500).send({

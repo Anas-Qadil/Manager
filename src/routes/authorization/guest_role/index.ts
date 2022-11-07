@@ -4,15 +4,22 @@ import middleware from "../../../middlewares/authorization/guest_role";
 
 const router = express.Router();
 
-// router.get("/", );
+// get logged in user role 
 router.get("/", controller.getGuestRole);
 
-router.get("/all", controller.getAllGuestRoles);
-
+// get guest role by id
 router.get("/:id", controller.getGuestByID);
 
+// get all guest roles
+router.get("/all", controller.getAllGuestRoles);
+
+// create guest role
 router.post("/", middleware.createGuestRole, controller.createGuestRole);
 
+// update guest role
 router.put("/:id", middleware.updateGuestRole, controller.updateGuestRole);
+
+// delete guest role
+router.delete("/:id", controller.deleteGuestRole);
 
 export default router;

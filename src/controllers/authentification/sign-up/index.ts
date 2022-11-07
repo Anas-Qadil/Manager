@@ -8,9 +8,9 @@ const signUpController = async (req: Request, res: Response) => {
       if (guest.errorCode === "P2002") return res.status(400).json({ message: "Username already exists" });
       return res.status(400).json({ message: "failed creating guest" });
     }
-    res.status(200).json({
+    res.status(201).json({
       message: "Signed up successfully",
-      guest: guest.guest,
+      data: guest.guest,
     });
   } catch (e) {
     res.status(500).send({ message: "Internal server error." });
