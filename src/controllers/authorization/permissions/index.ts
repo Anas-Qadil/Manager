@@ -4,7 +4,7 @@ import { PermissionsService } from "../../../services/permission/permission.clas
 // permissions of the logged in user 
 const getUserPermissions = async (req: Request, res: Response) => {
   try {
-    if (!req.user) res.status(401).send({ message: "user is not logged in" });
+    if (!req.user) res.status(400).send({ message: "user is not logged in" });
 
     const user: any = req.user; // get the user from the request
     const permissions = await new PermissionsService().getUserPermissions(user.id);
@@ -42,7 +42,7 @@ const getPermissionByID = async (req: Request, res: Response) => {
 const createPermission = async (req: Request, res: Response) => {
   try {
     const permissions = await new PermissionsService().createPermission(req.body);
-    if (!permissions) return res.status(400).send({ message: "permission not created" });
+    if (!permissions) return res.status(404).send({ message: "permission not created" });
     res.status(201).send({
       message: "permission created",
       data: permissions
@@ -56,9 +56,9 @@ const createPermission = async (req: Request, res: Response) => {
 
 const updatePermission = async (req: Request, res: Response) => {
   try {
-    if (!req.params.id) res.status(401).send({ message: "permission ID is required" });
+    if (!req.params.id) res.status(400).send({ message: "permission ID is required" });
     const permissions = await new PermissionsService().updatePermission(req.params.id, req.body);
-    if (!permissions) return res.status(400).send({ message: "permission not updated" });
+    if (!permissions) return res.status(404).send({ message: "permission not updated" });
     res.status(200).send({
       message: "permission updated",
       data: permissions
@@ -72,9 +72,9 @@ const updatePermission = async (req: Request, res: Response) => {
 
 const deletePermission = async (req: Request, res: Response) => {
   try {
-    if (!req.params.id) res.status(401).send({ message: "permission ID is required" });
+    if (!req.params.id) res.status(400).send({ message: "permission ID is required" });
     const permissionsService = await new PermissionsService().deletePermission(req.params.id);
-    if (!permissionsService) return res.status(400).send({ message: "permission not deleted" });
+    if (!permissionsService) return res.status(404).send({ message: "permission not deleted" });
     res.status(200).send({
       message: "permission deleted",
       data: permissionsService

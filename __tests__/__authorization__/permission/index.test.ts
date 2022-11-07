@@ -83,7 +83,11 @@ describe("GET: /api/v1/permissions", () => {
     const res = await request(server)
       .get("/api/v1/permissions")
       .set("Authorization", `Bearer ${token}`);
-    expect(res.status).toBe(200);
+    if (res.status === 200) {
+      expect(res.status).toBe(200);
+      expect(res.body.data).toHaveProperty("id");
+    } else 
+      expect(res.status).toBe(404);
   });
 });
 
@@ -111,7 +115,7 @@ describe("PUT: /api/v1/permissions/:id", () => {
       .send({
         name: "undefined",
       });
-    expect(res.status).toBe(400);
+    expect(res.status).toBe(404);
   });
 });
 

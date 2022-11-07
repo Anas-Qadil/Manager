@@ -6,13 +6,13 @@ const getGuest = async (req: Request, res: Response) => {
   try {
     const user: any = req.user;
     if (!user) {
-      return res.status(400).send({
+      return res.status(404).send({
         message: 'user not found',
       });
     }
     const guestData:any = await new GuestService().getGuestByID(user.id);
     if (guestData.error) {
-      return res.status(400).send({
+      return res.status(404).send({
         message: 'guest not found',
       });
     }

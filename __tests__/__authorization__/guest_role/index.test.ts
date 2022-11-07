@@ -6,14 +6,13 @@ jest.setTimeout(600000);
 let token = ""; // token for admin user
 let createdPermissionId = ""; // this will be used to update and delete the permission
 const randomNumber = Math.floor(Math.random() * 1000) + 1; // this will be used to create a new permission
-let updatedPermissionId = ""; // this will be used to update the permission
 let createdRole = ""; // this will be used to update and delete the role
-let updatedRole = ""; // this will be used to update the role
 let guestID  = ""; // this will be used to update and delete the guest role
 let guest_roleID = ""; // this will be used to update and delete the guest role
 let updatedGuestRole = ""; // this will be used to update the guest role
-/*  ********* ALL TESTS BELOW SHOULD PASS ********* */
 
+
+/*  ********* ALL TESTS BELOW SHOULD PASS ********* */
 beforeAll(async () => {
   // get token
   const res = await request(server)
@@ -49,8 +48,8 @@ beforeAll(async () => {
     .post("/api/v1/auth/sign-up")
     .set("Authorization", `Bearer ${token}`)
     .send({
-      username: `Unit ${randomNumber}`,
-      password: `Unit ${randomNumber}`,
+      username: `Unit${randomNumber}`,
+      password: `Unit${randomNumber}`,
       matricule: `Unit ${randomNumber}`,
     });
   guestID = guest.body.data.id;
