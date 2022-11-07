@@ -17,7 +17,7 @@ server.use(express.json()); // parse json bodies
 server.use(express.urlencoded({ extended: true })); // parse urlencoded bodies
 server.use(cors()); // allow cross-origin requests !important for development only
 server.use(halmet()); // secure your Express apps by setting various HTTP headers
-server.use(passport.initialize({ userProperty: "user" }));
+server.use(passport.initialize({ userProperty: "user" })); // initialize passport
 
 // configure router
 server.use(Router);

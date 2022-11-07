@@ -1,4 +1,4 @@
-import express, { Express } from 'express';
+import express from 'express';
 import auth from './authentification/index'
 import permissions from './authorization/permissions'
 import roleAccess from './authorization/role_access'

@@ -1,5 +1,6 @@
 import { Request, Response, NextFunction } from "express";
-import { PermissionsService } from "../../../services/permission/permission.class";
+import { validString } from "../../../utils";
+import { IPermission } from "../../../interfaces";
 
 // TODO: check if user has access to the specific route
 const hasAccess = (req: Request, res: Response, next: NextFunction) => {
@@ -15,7 +16,6 @@ const hasAccess = (req: Request, res: Response, next: NextFunction) => {
 
 const getPermissionByID = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("getPermissionByID");
     next();
   } catch (e) {
     res.status(500).send({
@@ -26,7 +26,16 @@ const getPermissionByID = async (req: Request, res: Response, next: NextFunction
 
 const createPermission = (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("createPermission");
+    if (!req.body.name) {
+      return res.status(400).send({
+        message: "permission name is required",
+      });
+    }
+    if (!validString(req.body.name)) {
+      return res.status(400).send({
+        message: "permission name is invalid",
+      });
+    }
     next(); 
   } catch (e) {
     res.status(500).send({
@@ -37,7 +46,20 @@ const createPermission = (req: Request, res: Response, next: NextFunction) => {
 
 const updatePermission = (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("updatePermission");
+    if (req.body.name) {
+      if (!validString(req.body.name)) {
+        return res.status(400).send({
+          message: "permission name is invalid",
+        });
+      }
+    }
+    if (req.body.description) {
+      if (!validString(req.body.description)) {
+        return res.status(400).send({
+          message: "permission description is invalid",
+        });
+      }
+    }
     next();
   } catch (e) {
     res.status(500).send({

@@ -1,39 +1,126 @@
 import request from "supertest";
 import server from "../../../server";
 
-// PUT: /api/auth/permission
-describe("create permission", () => {
-	test("it should return return 400", async () => {
-    const data = {}; // empty data
-    if (!process.env.PERMISSION_ID)
-      throw new Error("JWT_TOKEN is not defined");
-    const id: string = process.env.PERMISSION_ID;
+jest.setTimeout(600000)
 
-    const response = await request(server)
-            .put(`/api/authorization/permissions/${id}`)
-            .set("Authorization", "Bearer " + process.env.JWT_TOKEN)
-            .send(data);
-    expect(response.statusCode).toBe(400);
-    expect(response.body).toHaveProperty("data");
+let token = ""; // token for admin user
+let createdPermissionId = ""; // this will be used to update and delete the permission
+const randomNumber = Math.floor(Math.random() * 1000) + 1; // this will be used to create a new permission
+let updatedPermissionId = ""; // this will be used to update the permission
+
+/*  ********* ALL TESTS BELOW SHOULD PASS ********* */
+
+beforeAll(async () => {
+  // get token
+  const res = await request(server)
+    .post("/api/v1/auth/sign-in")
+    .send({
+      username: "anas",
+      password: "anas"
+    });
+  token = res.body.token;
+});
+
+// POST: /api/v1/permissions
+describe("POST: /api/v1/permissions", () => {
+  it("should return 201", async () => {
+    const res = await request(server)
+      .post("/api/v1/permissions")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: `Unit ${randomNumber}`,
+        description: `this is a unit test permission ${randomNumber}`,
+      });
+    expect(res.status).toBe(201);
+    expect(res.body.data).toHaveProperty("id");
+    createdPermissionId = res.body.data.id;
   });
 });
 
-// GET: /api/auth/permission
-describe("get permission by id", () => {
-  test("it should return 404", async () => {
-    let id: any;
-    // const id = undefined;
-    
-    // random number between 1 and 3 
-    const num = Math.floor(Math.random() * 3) + 1;
-    if (num === 1) id = undefined;
-    if (num === 2) id = null;
-    if (num === 3) id = "invalid id";
+// PUT: /api/auth/permission
+describe("PUT: /api/v1/permissions/:id", () => {
+  it("should return 200", async () => {
+    const res = await request(server)
+      .put(`/api/v1/permissions/${createdPermissionId}`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: `Unit ${randomNumber} updated`,
+        description: `this is a unit test permission ${randomNumber} updated`,
+      });
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveProperty("id");
+    updatedPermissionId = res.body.data.id;
+  });
+});
 
-    const response = await request(server)
-            .get(`/api/authorization/permissions/${id}`)
-            .set("Authorization", "Bearer " + process.env.JWT_TOKEN);
-    expect(response.statusCode).toBe(500);
-    // else expect(response.statusCode).toBe(404);
+// DELETE: /api/v1/permissions/:id
+describe("DELETE: /api/v1/permissions/:id", () => {
+  it("should return 200", async () => {
+    const res = await request(server)
+      .delete(`/api/v1/permissions/${createdPermissionId}`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveProperty("id");
+    expect(res.body.data.archive).toBe(true);
+  });
+});
+
+
+// GET: /api/auth/permissions/:id
+describe("GET: /api/v1/permissions/:id", () => {
+  it("should return 200", async () => {
+    const res = await request(server)
+      .get(`/api/v1/permissions/${updatedPermissionId}`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(200);
+    expect(res.body.data).toHaveProperty("id");
+  });
+});
+
+// GET: /api/auth/permissions (get logged int user permissions)
+describe("GET: /api/v1/permissions", () => {
+  it("should return 200", async () => {
+    const res = await request(server)
+      .get("/api/v1/permissions")
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(200);
+  });
+});
+
+/*  ********* ALL TESTS BELOW SHOULD FAIL ********* */
+
+// POST: /api/v1/permissions
+describe("POST: /api/v1/permissions", () => {
+  it("should return 400", async () => {
+    const res = await request(server)
+      .post("/api/v1/permissions")
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: undefined,
+      });
+    expect(res.status).toBe(400);
+  });
+});
+
+// PUT: /api/auth/permission
+describe("PUT: /api/v1/permissions/:id", () => {
+  it("should return 400", async () => {
+    const res = await request(server)
+      .put(`/api/v1/permissions/65656465465465465`)
+      .set("Authorization", `Bearer ${token}`)
+      .send({
+        name: "undefined",
+      });
+    expect(res.status).toBe(400);
+  });
+});
+
+// GET: /api/auth/permissions/:id
+describe("GET: /api/v1/permissions/:id", () => {
+  it("should return 400", async () => {
+    const res = await request(server)
+      .get(`/api/v1/permissions/65656465465465465`)
+      .set("Authorization", `Bearer ${token}`);
+    expect(res.status).toBe(404);
   });
 });

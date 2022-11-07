@@ -1,24 +1,22 @@
 import express, { Request, Response } from "express";
-import role from "../../../controllers/authorization/role_access";
+import controller from "../../../controllers/authorization/role_access";
+import middleware from "../../../middlewares/authorization/role_access";
 
 const router = express.Router();
 
-// get role access of the logged in user
-router.get("/", role.getUserRole);
-
-// get all role 
-router.get("/all", role.getAllRole);
+// get all roles
+router.get("/all", controller.getAllRole);
 
 // get role  of a specific user
-router.get("/:id", role.getRoleByID);
+router.get("/:id", controller.getRoleByID);
 
 // create a new role
-router.post("/", role.createRole);
+router.post("/", middleware.createRole, controller.createRole);
 
 // update a role 
-router.put("/:id", role.updateRole);
+router.put("/:id", middleware.updateRole, controller.updateRole);
 
 // delete a role  | means that the role  will be archived
-router.delete("/:id", role.deleteRole);
+router.delete("/:id", controller.deleteRole);
 
 export default router;

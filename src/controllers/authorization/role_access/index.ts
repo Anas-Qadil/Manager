@@ -2,39 +2,13 @@ import { Request, Response } from "express";
 import RoleService from "../../../services/role_access/role.class";
 import GuestService from "../../../services/guests/guest.class";
 
-// get role  of the logged in user
-const getUserRole = async (req: Request, res: Response) => {
-	try {
-    const user: any = req.user;
-    const guestData: any = await new GuestService().getGuestByID(user.id);
-    if (guestData) {
-      const roleData = await new RoleService().getRoleByID(guestData.role);
-      if (roleData) {
-        return res.status(200).send({
-          message: "role  data",
-          role: roleData
-        });
-      } else {
-          return res.status(404).send({
-            message: "role  not found",
-          });
-      }
-    }
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
-}
-
 const getAllRole = async (req: Request, res: Response) => {
   try {
     const roleData = await new RoleService().getAllRole();
-    console.log(roleData);
     if (roleData) {
       return res.status(200).send({
         message: "role  data",
-        role: roleData
+        data: roleData
       });
     } else {
         return res.status(404).send({
@@ -47,7 +21,6 @@ const getAllRole = async (req: Request, res: Response) => {
     });
   }
 }
-
 
 const getRoleByID = async (req: Request, res: Response) => {
   try {
@@ -64,7 +37,7 @@ const getRoleByID = async (req: Request, res: Response) => {
     }
     res.status(200).send({
       message: "role  found",
-      role: roleData,
+      data: roleData,
     });
 
   } catch (err) {
@@ -85,9 +58,9 @@ const createRole = async (req: Request, res: Response) => {
         message: "role  not created",
       });
     }
-    res.status(200).send({
+    res.status(201).send({
       message: "role  created",
-      role: roleData,
+      data: roleData,
     });
 
   } catch (err) {
@@ -107,7 +80,7 @@ const updateRole = async (req: Request, res: Response) => {
     }
     res.status(200).send({
       message: "role  updated",
-      role: roleData,
+      data: roleData,
     });
 
   } catch (err) {
@@ -132,7 +105,7 @@ const deleteRole = async (req: Request, res: Response) => {
     }
     res.status(200).send({
       message: "role  deleted",
-      role: roleData,
+      data: roleData,
     });
 
   } catch (err) {
@@ -143,7 +116,6 @@ const deleteRole = async (req: Request, res: Response) => {
 }
 
 export default {
-  getUserRole,
   getRoleByID,
   createRole,
   updateRole,

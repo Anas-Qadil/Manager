@@ -1,8 +1,10 @@
 import prisma from "../../prisma/connection";
+import { IPermission } from "../../interfaces";
 
 export class PermissionsService {
 	public async getPermissionByID(id: string) {
     try {
+      if (!id) return null;
       return await prisma.permissions.findUnique({
         where: {
           id: id,
@@ -15,6 +17,7 @@ export class PermissionsService {
 
   public async getUserPermissions(id: string) {
     try {
+      if (!id) return null;
       const data: any = await prisma.user_role.findFirst({
         where: {
           guestID : id,
@@ -57,8 +60,9 @@ export class PermissionsService {
     }
   }
 
-  public async updatePermission(id: string, data: any) {
+  public async updatePermission(id: string, data: IPermission) {
     try {
+      if (!id) return null;
       const archived = await prisma.permissions.update({
         where: {
           id: id,
@@ -67,11 +71,11 @@ export class PermissionsService {
           archive: true,
         },
       });
+
       if (archived) {
-        return await prisma.permissions.update({
-          where: {
-            id: id,
-          },
+        if (!data.name) data.name = archived.name || "";
+        if (!data.description) data.description = archived.description || "";
+        return await prisma.permissions.create({
           data: data
         });
       }
@@ -82,6 +86,7 @@ export class PermissionsService {
 
   public async deletePermission(id: string) {
     try {
+      if (!id) return null;
       return await prisma.permissions.update({
         where: {
           id: id,
