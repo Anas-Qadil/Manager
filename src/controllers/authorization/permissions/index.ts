@@ -7,7 +7,7 @@ const getUserPermissions = async (req: Request, res: Response) => {
     const user: any = req.user; // get the user from the request
     if (!user.id) res.status(401).send({ message: "unauthorized" });
 
-    const permissionsService = await new PermissionsService().getPermissionByID(user.id);
+    const permissionsService = await new PermissionsService().getUserPermissions(user.id);
     if (!permissionsService) return res.status(404).send({ message: "permissions not found" });
 
     res.status(200).send({

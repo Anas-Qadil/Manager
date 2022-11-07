@@ -13,7 +13,7 @@ router.get("/:id", permissions.getPermissionByID);
 router.post("/", middleware.createPermission, permissions.createPermission);
 
 // update a permission
-router.put("/:id", middleware.updatePermission,permissions.updatePermission);
+router.put("/:id", middleware.updatePermission, permissions.updatePermission);
 
 // delete a permission | means that the permission will be archived
 router.delete("/:id", middleware.deletePermission, permissions.deletePermission);

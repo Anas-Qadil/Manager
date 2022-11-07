@@ -1,21 +1,24 @@
 import express, { Request, Response } from "express";
-import roleAccess from "../../../controllers/authorization/role_access";
+import role from "../../../controllers/authorization/role_access";
 
 const router = express.Router();
 
 // get role access of the logged in user
-router.get("/", roleAccess.getUserRoleAccess);
+router.get("/", role.getUserRole);
 
-// get role access of a specific user
-router.get("/:id", roleAccess.getRoleAccessByID);
+// get all role 
+router.get("/all", role.getAllRole);
 
-// create a new role access
-router.post("/", roleAccess.createRoleAccess);
+// get role  of a specific user
+router.get("/:id", role.getRoleByID);
 
-// update a role access
-router.put("/:id", roleAccess.updateRoleAccess);
+// create a new role
+router.post("/", role.createRole);
 
-// delete a role access | means that the role access will be archived
-router.delete("/:id", roleAccess.deleteRoleAccess);
+// update a role 
+router.put("/:id", role.updateRole);
+
+// delete a role  | means that the role  will be archived
+router.delete("/:id", role.deleteRole);
 
 export default router;

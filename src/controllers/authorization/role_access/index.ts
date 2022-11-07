@@ -1,23 +1,23 @@
 import { Request, Response } from "express";
-import RoleAccessService from "../../../services/role_access/roleAccess.class";
+import RoleService from "../../../services/role_access/role.class";
 import GuestService from "../../../services/guests/guest.class";
 
-// get role access of the logged in user
-const getUserRoleAccess = async (req: Request, res: Response) => {
+// get role  of the logged in user
+const getUserRole = async (req: Request, res: Response) => {
 	try {
     const user: any = req.user;
     const guestData: any = await new GuestService().getGuestByID(user.id);
     if (guestData) {
-      const roleAccessData = await new RoleAccessService().getRoleAccessByID(guestData.role);
-      if (roleAccessData) {
+      const roleData = await new RoleService().getRoleByID(guestData.role);
+      if (roleData) {
         return res.status(200).send({
-          message: "role access data",
-          role: roleAccessData
+          message: "role  data",
+          role: roleData
         });
       } else {
-        return res.status(404).send({
-          message: "role access not found",
-        });
+          return res.status(404).send({
+            message: "role  not found",
+          });
       }
     }
   } catch (err) {
@@ -27,22 +27,44 @@ const getUserRoleAccess = async (req: Request, res: Response) => {
   }
 }
 
-const getRoleAccessByID = async (req: Request, res: Response) => {
+const getAllRole = async (req: Request, res: Response) => {
+  try {
+    const roleData = await new RoleService().getAllRole();
+    console.log(roleData);
+    if (roleData) {
+      return res.status(200).send({
+        message: "role  data",
+        role: roleData
+      });
+    } else {
+        return res.status(404).send({
+          message: "role  not found",
+        });
+      }
+  } catch (err) {
+    res.status(500).send({
+      message: "internal server error",
+    });
+  }
+}
+
+
+const getRoleByID = async (req: Request, res: Response) => {
   try {
     if (!req.params.id) {
       return res.status(400).send({
         message: "id is required",
       });
     }
-    const roleAccessData = await new RoleAccessService().getRoleAccessByID(req.params.id);
-    if (!roleAccessData) {
+    const roleData = await new RoleService().getRoleByID(req.params.id);
+    if (!roleData) {
       return res.status(404).send({
-        message: "role access not found",
+        message: "role  not found",
       });
     }
     res.status(200).send({
-      message: "role access found",
-      roleAccess: roleAccessData,
+      message: "role  found",
+      role: roleData,
     });
 
   } catch (err) {
@@ -52,17 +74,20 @@ const getRoleAccessByID = async (req: Request, res: Response) => {
   }
 }
 
-const createRoleAccess = async (req: Request, res: Response) => {
+const createRole = async (req: Request, res: Response) => {
   try {
-    const roleAccessData = await new RoleAccessService().createRoleAccess(req.body);
-    if (!roleAccessData) {
+    const data: any = req.body;
+    const user: any = req.user;
+    data.creatorID = user.id;
+    const roleData = await new RoleService().createRole(req.body);
+    if (!roleData) {
       return res.status(400).send({
-        message: "role access not created",
+        message: "role  not created",
       });
     }
     res.status(200).send({
-      message: "role access created",
-      roleAccess: roleAccessData,
+      message: "role  created",
+      role: roleData,
     });
 
   } catch (err) {
@@ -72,17 +97,17 @@ const createRoleAccess = async (req: Request, res: Response) => {
   }
 }
 
-const updateRoleAccess = async (req: Request, res: Response) => {
+const updateRole = async (req: Request, res: Response) => {
   try {
-    const roleAccessData = await new RoleAccessService().updateRoleAccess(req.params.id, req.body);
-    if (!roleAccessData) {
+    const roleData = await new RoleService().updateRole(req.params.id, req.body);
+    if (!roleData) {
       return res.status(400).send({
-        message: "role access not updated",
+        message: "role  not updated",
       });
     }
     res.status(200).send({
-      message: "role access updated",
-      roleAccess: roleAccessData,
+      message: "role  updated",
+      role: roleData,
     });
 
   } catch (err) {
@@ -92,22 +117,22 @@ const updateRoleAccess = async (req: Request, res: Response) => {
   }
 }
 
-const deleteRoleAccess = async (req: Request, res: Response) => {
+const deleteRole = async (req: Request, res: Response) => {
   try {
     if (!req.params.id) {
       return res.status(400).send({
         message: "id is required",
       });
     }
-    const roleAccessData = await new RoleAccessService().deleteRoleAccess(req.params.id);
-    if (!roleAccessData) {
+    const roleData = await new RoleService().deleteRole(req.params.id);
+    if (!roleData) {
       return res.status(400).send({
-        message: "role access not deleted",
+        message: "role  not deleted",
       });
     }
     res.status(200).send({
-      message: "role access deleted",
-      roleAccess: roleAccessData,
+      message: "role  deleted",
+      role: roleData,
     });
 
   } catch (err) {
@@ -118,9 +143,10 @@ const deleteRoleAccess = async (req: Request, res: Response) => {
 }
 
 export default {
-  getUserRoleAccess,
-  getRoleAccessByID,
-  createRoleAccess,
-  updateRoleAccess,
-  deleteRoleAccess,
+  getUserRole,
+  getRoleByID,
+  createRole,
+  updateRole,
+  deleteRole,
+  getAllRole
 };

@@ -1,23 +1,23 @@
 import prisma from "../../prisma/connection";
 
-export default class RoleAccessService {
-	public async getAllRoleAccess() {
+export default class RoleService {
+	public async getAllRole() {
     try {
       return await prisma.roles.findMany({
         where: {
           archive: false,
         },
-      });
-    } catch (e) {
-      return null;
-    }
-  }
-
-  public async getRoleAccessByID(id: string) {
-    try {
-      return await prisma.roles.findUnique({
-        where: {
-          id: id,
+        include: {
+          permissions: true,
+          creator: {
+            select: {
+              id: true,
+              username: true,
+              active: true,
+              matricule: true,
+              createdAt: true,
+            },
+          }
         },
       });
     } catch (e) {
@@ -25,17 +25,42 @@ export default class RoleAccessService {
     }
   }
 
-  public async createRoleAccess(data: any) {
+  public async getRoleByID(id: string) {
     try {
-      return await prisma.roles.create({
-        data: data,
+      return await prisma.roles.findUnique({
+        where: {
+          id: id,
+        },
+        include: {
+          permissions: true,
+          creator: {
+            select: {
+              id: true,
+              username: true,
+              active: true,
+              matricule: true,
+              createdAt: true,
+            },
+          }
+        },
       });
     } catch (e) {
       return null;
     }
   }
 
-  public async updateRoleAccess(id: string, data: any) {
+  public async createRole(data: any) {
+    try {
+      return await prisma.roles.create({
+        data: data,
+      });
+    } catch (e) {
+      console.log(e);
+      return null;
+    }
+  }
+
+  public async updateRole(id: string, data: any) {
     try {
       const archivedRole = await prisma.roles.update({
         where: {
@@ -56,7 +81,7 @@ export default class RoleAccessService {
     }
   }
 
-  public async deleteRoleAccess(id: string) {
+  public async deleteRole(id: string) {
     try {
       return await prisma.roles.update({
         where: {

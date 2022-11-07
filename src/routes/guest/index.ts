@@ -1,5 +1,6 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import { getGuest, getGuests, getGuestByID, updateGuest, deleteGuest } from '../../controllers/guest/index';
+import middleware from '../../middlewares/guest';
 
 const router = express.Router();
 
@@ -16,6 +17,6 @@ router.get("/:id", getGuestByID);
 router.delete("/:id", deleteGuest);
 
 // update guest by id
-router.put("/:id", updateGuest);
+router.put("/:id", middleware.updateGuest, updateGuest);
 
 export default router;

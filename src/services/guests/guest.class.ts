@@ -37,6 +37,7 @@ export default class GuestService {
         },
         include: {
           creator: true,
+          role: true,
         },
       });
       return {
@@ -61,6 +62,7 @@ export default class GuestService {
         guest
       };
     } catch (e: any) {
+      console.log(e);
       return ({
         errorCode: e.code,
         guest: null

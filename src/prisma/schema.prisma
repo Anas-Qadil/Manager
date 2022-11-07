@@ -8,51 +8,76 @@ datasource db {
 }
 
 model guests {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  active    Boolean  @default(true)
-  archive   Boolean  @default(false)
-  creatorId String?  @db.ObjectId
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  active    Boolean @default(true)
+  archive   Boolean @default(false)
+  creatorId String? @db.ObjectId
   matricule String
   password  String
-  username  String   @unique
-  roles     String[] @db.ObjectId
+  username  String  @unique
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  creator guests?  @relation("guestCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  guests  guests[] @relation("guestCreator")
-  Role    Roles[]  @relation()
+  role         user_role[] @relation("role")
+  asigned      user_role[] @relation("asignee")
+  creator      guests?     @relation("guestCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  guests       guests[]    @relation("guestCreator")
+  rolesCreated Roles[]     @relation("roleCreator")
+
+  @@map("guests")
+}
+
+model user_role {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  archive Boolean @default(false)
+
+  guestID String? @db.ObjectId
+  guest guests? @relation("role", fields: [guestID], references: [id])
+
+  assignedBy  String? @db.ObjectId
+  assignedBy_ guests? @relation("asignee", fields: [assignedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  roleID String[] @db.ObjectId
+  role   Roles[]  @relation(fields: [roleID], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("guest_user_role")
 }
 
 model Roles {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
-  name          String
-  permissionIDs String[] @db.ObjectId
-  guestID      String @db.ObjectId
-  archive       Boolean  @default(false)
-  creatorID     String?  @db.ObjectId
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  archive Boolean @default(false)
+  name    String
+
+  user_role  String[]     @db.ObjectId
+  user_role_ user_role[] @relation(fields: [user_role], references: [id])
+
+  permissionIDs String[]      @db.ObjectId
+  permissions   Permissions[] @relation(fields: [permissionIDs], references: [id])
+
+  creatorID String? @db.ObjectId
+  creator   guests? @relation("roleCreator", fields: [creatorID], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
-
-  Permissions Permissions[] @relation(fields: [permissionIDs], references: [id])
-  guests      guests      @relation(fields: [guestID], references: [id])
 
   @@map("guest_roles")
 }
 
 model Permissions {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
   name        String
-  // accessLevel access[] @default([READ])
+  archive     Boolean @default(false)
   description String?
-  archive     Boolean  @default(false)
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
-  roleIDs   String[]  @db.ObjectId
-  roles     Roles[]   @relation(fields: [roleIDs], references: [id])
+
+  roleIDs String[] @db.ObjectId
+  role    Roles[]  @relation(fields: [roleIDs], references: [id])
 
   @@map("guest_permissions")
 }
