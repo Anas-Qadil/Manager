@@ -1,24 +1,11 @@
 import { Request, Response, NextFunction } from "express";
-//11;[11]>iex
-const updateGuest = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!req.body) {
-      return res.status(400).send({
-        message: "content can not be empty!",
-      });
-    }
-    if (!req.params.id) {
-      return res.status(400).send({
-        message: "id can not be empty!",  
-      });
-    }
+import { PropertyRequiredError, EmptyRequestBodyError, NotFoundError, ResourceNotCreatedError, ResourceNotDeletedError, ResourceNotUpdatedError } from "../../services/error/error.class";
 
-    next();
-  } catch (e) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+
+const updateGuest = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.body) throw new EmptyRequestBodyError("empty request body");
+  if (!req.params.id) throw new PropertyRequiredError("id");
+  next();
 }
 
 export default {

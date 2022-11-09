@@ -1,6 +1,32 @@
 import prisma from "../../prisma/connection";
 
 export default class RoleService {
+
+  public async getRoles(userID: string) {
+    try {
+      const data: any = await prisma.user_role.findFirst({
+        where: {
+          guestID: userID,
+        },
+        select: {
+          role: {
+            select: {
+              name: true,
+              id: true,
+            },
+          },
+        },
+      });
+      const roles: any = [];
+      data.role.map((role: any) => {
+        roles.push(role);
+      });
+      return roles;
+    } catch (e) {
+      return null;
+    }
+  }
+
 	public async getAllRole() {
     try {
       return await prisma.roles.findMany({

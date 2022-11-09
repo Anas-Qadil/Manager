@@ -99,4 +99,25 @@ export class PermissionsService {
       return null;
     }
   }
+
+  public async hasPermission(id: string, permission: string) {
+    try {
+      return await prisma.permissions.count({
+        where: {
+          name: permission,
+          role:{
+            some:{
+              user_role_:{
+                some:{
+                  guestID:id
+                }
+              }
+            }
+          }
+        },
+      });
+    } catch (e) {
+      return false;
+    }
+  }
 }

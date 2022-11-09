@@ -1,26 +1,15 @@
 import { Request, Response, NextFunction } from "express";
+import { IUser } from "../../../interfaces";
 
 const createGuestRole = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    const user: any = req.user;
-    const data: any = req.body;
-    data.assignedBy = user.id;
-    next();
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+  const user = req.user as IUser;
+  const data: any = req.body;
+  data.assignedBy = user.id;
+  next();
 }
 
 const updateGuestRole = async (req: Request, res: Response, next: NextFunction) => {
-  try {
-    next();
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+  next();
 }
 
 export default {

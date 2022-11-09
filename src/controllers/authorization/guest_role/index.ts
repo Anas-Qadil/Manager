@@ -1,130 +1,53 @@
-import { Request, Response } from "express"
+import { NextFunction, Request, Response } from "express"
+import { IUser } from "../../../interfaces";
 import GuestRoleService from "../../../services/role_access/guestRole.class";
+import { PropertyRequiredError, NotFoundError, ResourceNotCreatedError, ResourceNotDeletedError, ResourceNotUpdatedError } from "../../../services/error/error.class";
 
 // get logged in user role
-const getGuestRole = async (req: Request, res: Response) => {
-  try {
-    const user: any = req.user;
-    const guestRoleData = await new GuestRoleService().getGuestRoleByID(user.id);
-    if (!guestRoleData) {
-      return res.status(404).send({
-        message: "guest role not found",
-      });
-    }
-    res.status(200).send({
-      message: "guest role found",
-      data: guestRoleData,
-    });
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const getGuestRole = async (req: Request, res: Response, next: NextFunction) => {
+  req.log = { ...req.log, event: "get logged in guest role", error: false, message: "success"}
+  const user = req.user as IUser;
+  const guestRoleData = await new GuestRoleService().getGuestRole(user.id);
+  if (!guestRoleData) throw new NotFoundError("guest role not found");
+  res.status(200).send({ message: "guest role found", data: guestRoleData });
+  next();
 }
 
-const getGuestByID = async (req: Request, res: Response) => {
-  try {
-    if (!req.params.id) {
-      return res.status(400).send({
-        message: "id is required",
-      });
-    }
-    const guestRoleData = await new GuestRoleService().getGuestRoleByID(req.params.id);
-    if (!guestRoleData) {
-      return res.status(404).send({
-        message: "guest role not found",
-      });
-    }
-    res.status(200).send({
-      message: "guest role found",
-      data: guestRoleData,
-    });
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const getGuestRoleByID = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.params.id) throw new PropertyRequiredError("guest role id is required");
+  const guestRoleData = await new GuestRoleService().getGuestRoleByID(req.params.id);
+  if (!guestRoleData) throw new NotFoundError("guest role not found");
+  res.status(200).send({ message: "guest role found", data: guestRoleData });
+  next();
 }
 
-const getAllGuestRoles = async (req: Request, res: Response) => {
-  try {
-    const guestRoleData = await new GuestRoleService().getAllGuestRoles();
-    if (!guestRoleData) {
-      return res.status(404).send({
-        message: "guest roles not found",
-      });
-    }
-    res.status(200).send({
-      message: "guest roles found",
-      data: guestRoleData,
-    });
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const getAllGuestRoles = async (req: Request, res: Response, next: NextFunction) => {
+  const guestRoleData = await new GuestRoleService().getAllGuestRoles();
+  if (!guestRoleData) throw new NotFoundError("guest roles not found");
+  res.status(200).send({ message: "guest roles found", data: guestRoleData });
+  next();
 }
 
-const createGuestRole = async (req: Request, res: Response) => {
-  try {
-    const guestRoleData = await new GuestRoleService().createGuestRole(req.body);
-    if (!guestRoleData) {
-      return res.status(404).send({
-        message: "guest role not created",
-      });
-    }
-    res.status(201).send({
-      message: "guest role created",
-      data: guestRoleData,
-    });
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const createGuestRole = async (req: Request, res: Response, next: NextFunction) => {
+  const guestRoleData = await new GuestRoleService().createGuestRole(req.body);
+  if (!guestRoleData) throw new ResourceNotCreatedError("guest role not created");
+  res.status(201).send({ message: "guest role created", data: guestRoleData });
+  next()
 }
 
-const updateGuestRole = async (req: Request, res: Response) => {
-  try {
-    const guestRoleData = await new GuestRoleService().updateGuestRole(req.params.id, req.body);
-    if (!guestRoleData) {
-      return res.status(404).send({
-        message: "guest role not updated",
-      });
-    }
-    res.status(200).send({
-      message: "guest role updated",
-      data: guestRoleData,
-    });
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const updateGuestRole = async (req: Request, res: Response, next: NextFunction) => {
+  const guestRoleData = await new GuestRoleService().updateGuestRole(req.params.id, req.body);
+  if (!guestRoleData) throw new ResourceNotUpdatedError("guest role not updated");
+  res.status(200).send({ message: "guest role updated", data: guestRoleData });
+  next();
 }
 
-const deleteGuestRole = async (req: Request, res: Response) => {
-  try {
-    if (!req.params.id) {
-      return res.status(400).send({
-        message: "id is required",
-      });
-    }
-    const guestRoleData = await new GuestRoleService().deleteGuestRole(req.params.id);
-    if (!guestRoleData) {
-      return res.status(404).send({
-        message: "guest role not deleted",
-      });
-    }
-    res.status(200).send({
-      message: "guest role deleted",
-      data: guestRoleData,
-    });
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const deleteGuestRole = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.params.id) throw new PropertyRequiredError("guest role id is required");
+  const guestRoleData = await new GuestRoleService().deleteGuestRole(req.params.id);
+  if (!guestRoleData) throw new ResourceNotDeletedError("guest role not deleted");
+  res.status(200).send({ message: "guest role deleted", data: guestRoleData });
+  next();
 }
 
 
@@ -134,5 +57,5 @@ export default {
   deleteGuestRole,
   getGuestRole,
   getAllGuestRoles,
-  getGuestByID
+  getGuestRoleByID
 };

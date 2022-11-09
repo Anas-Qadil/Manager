@@ -85,7 +85,6 @@ describe("GET: /api/v1/permissions", () => {
       .set("Authorization", `Bearer ${token}`);
     if (res.status === 200) {
       expect(res.status).toBe(200);
-      expect(res.body.data).toHaveProperty("id");
     } else 
       expect(res.status).toBe(404);
   });

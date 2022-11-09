@@ -1,6 +1,7 @@
 import { Request, Response, NextFunction } from "express";
 import { validString } from "../../../utils";
 import { IPermission } from "../../../interfaces";
+import { ValidationError, PropertyRequiredError } from "../../../services/error/error.class";
 
 // TODO: check if user has access to the specific route
 const hasAccess = (req: Request, res: Response, next: NextFunction) => {
@@ -25,47 +26,19 @@ const getPermissionByID = async (req: Request, res: Response, next: NextFunction
 }
 
 const createPermission = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (!req.body.name) {
-      return res.status(400).send({
-        message: "permission name is required",
-      });
-    }
-    if (!validString(req.body.name)) {
-      return res.status(400).send({
-        message: "permission name is invalid",
-      });
-    }
-    next(); 
-  } catch (e) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+  if (!req.body.name) throw new PropertyRequiredError("permission name is required");
+  if (!validString(req.body.name)) throw new ValidationError("permission name is invalid");
+  if (req.body.description) 
+    if (!validString(req.body.description)) throw new ValidationError("permission description is invalid");
+  next(); 
 }
 
 const updatePermission = (req: Request, res: Response, next: NextFunction) => {
-  try {
-    if (req.body.name) {
-      if (!validString(req.body.name)) {
-        return res.status(400).send({
-          message: "permission name is invalid",
-        });
-      }
-    }
-    if (req.body.description) {
-      if (!validString(req.body.description)) {
-        return res.status(400).send({
-          message: "permission description is invalid",
-        });
-      }
-    }
-    next();
-  } catch (e) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+  if (req.body.name) 
+    if (!validString(req.body.name)) throw new ValidationError("permission name is invalid");
+  if (req.body.description) 
+    if (!validString(req.body.description)) throw new ValidationError("permission description is invalid");
+  next();
 }
 
 const deletePermission = (req: Request, res: Response, next: NextFunction) => {

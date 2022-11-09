@@ -1,6 +1,26 @@
 import prisma from "../../prisma/connection";
 
 export default class GuestRoleService {
+
+  public async getGuestRole(guestID: string) {
+    try {
+      return await prisma.user_role.findFirst({
+        where: {
+          guestID: guestID,
+        },
+        include: {
+          role: {
+            include: {
+              permissions: true,
+            },
+          },
+        },
+      });
+    } catch (e) {
+      return null;
+    }
+  }
+
   public async getAllGuestRoles() {
     try {
       return await prisma.user_role.findMany({

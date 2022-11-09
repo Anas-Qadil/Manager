@@ -5,6 +5,8 @@ import roleAccess from './authorization/role_access'
 import guests from './guest/index'
 import passport from 'passport';
 import guestRole from "../routes/authorization/guest_role";
+import errorHandler from '../middlewares/error';
+import log from '../middlewares/log';
 
 const passportJWTSignIn    = passport.authenticate("jwt", { session: false });
 const router = express.Router();
@@ -14,20 +16,24 @@ router.use('/api/v1/auth', auth);
 
 router.use(passportJWTSignIn);
 // handle all permissions related routes
-router.use('/api/v1/permissions', permissions);
+router.use('/api/v1/permissions', permissions, log);
 
 // handle all role access related routes
-router.use("/api/v1/role", roleAccess);
+router.use("/api/v1/role", roleAccess, log);
 
 // handle all guests related routes
-router.use("/api/v1/guest-role", guestRole);
+router.use("/api/v1/guest-role", guestRole, log);
 
 // handle all guest related routes
-router.use("/api/v1/guest", guests);
+router.use("/api/v1/guest", guests, log);
 
 // error handling middleware
 router.use((_, res) => {
-  res.status(404).send('Not Found');
+  res.status(404);
+  res.send({ message: "route not found" });
 });
+
+router.use(errorHandler, log);
+
 
 export default router;

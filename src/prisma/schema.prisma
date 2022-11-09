@@ -33,7 +33,7 @@ model user_role {
   archive Boolean @default(false)
 
   guestID String? @db.ObjectId
-  guest guests? @relation("role", fields: [guestID], references: [id])
+  guest   guests? @relation("role", fields: [guestID], references: [id])
 
   assignedBy  String? @db.ObjectId
   assignedBy_ guests? @relation("asignee", fields: [assignedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
@@ -52,7 +52,7 @@ model Roles {
   archive Boolean @default(false)
   name    String
 
-  user_role  String[]     @db.ObjectId
+  user_role  String[]    @db.ObjectId
   user_role_ user_role[] @relation(fields: [user_role], references: [id])
 
   permissionIDs String[]      @db.ObjectId
@@ -82,9 +82,39 @@ model Permissions {
   @@map("guest_permissions")
 }
 
+model syslog {
+  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  dateTime      DateTime? @default(now())
+  appID         String?
+  event         String?
+  level         log_level
+  description   String
+  message       String?
+  userAgent     String?
+  sourceIP      String?
+  hostIP        String?
+  hostName      String?
+  protocol      String?
+  port          String?
+  requestURI    String?
+  requestMethod String?
+  region        String?
+  geo           String?
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("syslog")
+}
+
 // enum access {
 //   READ
 //   WRITE
 //   DELETE
 //   UPDATE
 // }
+
+enum log_level {
+  ERROR
+  SUCCESS
+}

@@ -9,7 +9,13 @@ import dotenv from "dotenv";
 dotenv.config();
 const server: Express = express();
 
-// configure passpoer
+declare global {
+	namespace Express {
+	  export interface Request {
+		log?: any
+	  }
+	}
+}
 
 // configure server
 server.use(morgan('dev')); // dev dependency for logging requests

@@ -1,121 +1,60 @@
-import { Request, Response } from "express";
+import { NextFunction, Request, Response } from "express";
 import RoleService from "../../../services/role_access/role.class";
-import GuestService from "../../../services/guests/guest.class";
+import { PropertyRequiredError, NotFoundError, ResourceNotCreatedError, ResourceNotDeletedError, ResourceNotUpdatedError } from "../../../services/error/error.class";
+import { IUser } from "../../../interfaces";
 
-const getAllRole = async (req: Request, res: Response) => {
-  try {
-    const roleData = await new RoleService().getAllRole();
-    if (roleData) {
-      return res.status(200).send({
-        message: "role  data",
-        data: roleData
-      });
-    } else {
-        return res.status(404).send({
-          message: "role  not found",
-        });
-      }
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+// get logged in user roles
+const getRoles = async (req: Request, res: Response, next: NextFunction) => {
+  req.log = { ...req.log, event: "get logged in user Roles", error: false, message: "success"}
+  const user = req.user as IUser;
+  const roleData = await new RoleService().getRoles(user.id);
+  if (!roleData) throw new NotFoundError("role not found");
+  res.status(200).send({ message: "role found", data: roleData });
+  next();
 }
 
-const getRoleByID = async (req: Request, res: Response) => {
-  try {
-    if (!req.params.id) {
-      return res.status(400).send({
-        message: "id is required",
-      });
-    }
-    const roleData = await new RoleService().getRoleByID(req.params.id);
-    if (!roleData) {
-      return res.status(404).send({
-        message: "role  not found",
-      });
-    }
-    res.status(200).send({
-      message: "role  found",
-      data: roleData,
-    });
-
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const getAllRole = async (req: Request, res: Response, next: NextFunction) => {
+  const roleData = await new RoleService().getAllRole();
+  if (!roleData) throw new NotFoundError("role not found");
+  res.status(200).send({ message: "roles found", data: roleData });
+  next()
 }
 
-const createRole = async (req: Request, res: Response) => {
-  try {
-    const data: any = req.body;
-    const user: any = req.user;
-    data.creatorID = user.id;
-    const roleData = await new RoleService().createRole(req.body);
-    if (!roleData) {
-      return res.status(400).send({
-        message: "role  not created",
-      });
-    }
-    res.status(201).send({
-      message: "role  created",
-      data: roleData,
-    });
-
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const getRoleByID = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.params.id) throw new PropertyRequiredError("role id is required");
+  const roleData = await new RoleService().getRoleByID(req.params.id);
+  if (!roleData) throw new NotFoundError("role not found");
+  res.status(200).send({ message: "role  found", data: roleData });
+  next()
 }
 
-const updateRole = async (req: Request, res: Response) => {
-  try {
-    const roleData = await new RoleService().updateRole(req.params.id, req.body);
-    if (!roleData) {
-      return res.status(400).send({
-        message: "role  not updated",
-      });
-    }
-    res.status(200).send({
-      message: "role  updated",
-      data: roleData,
-    });
-
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const createRole = async (req: Request, res: Response, next: NextFunction) => {
+  const data: any = req.body;
+  const user = req.user as IUser;
+  data.creatorID = user.id;
+  const roleData = await new RoleService().createRole(req.body);
+  if (!roleData) throw new ResourceNotCreatedError("role not created");
+  res.status(201).send({ message: "role  created", data: roleData });
+  next()
 }
 
-const deleteRole = async (req: Request, res: Response) => {
-  try {
-    if (!req.params.id) {
-      return res.status(400).send({
-        message: "id is required",
-      });
-    }
-    const roleData = await new RoleService().deleteRole(req.params.id);
-    if (!roleData) {
-      return res.status(400).send({
-        message: "role  not deleted",
-      });
-    }
-    res.status(200).send({
-      message: "role  deleted",
-      data: roleData,
-    });
+const updateRole = async (req: Request, res: Response, next: NextFunction) => {
+  const roleData = await new RoleService().updateRole(req.params.id, req.body);
+  if (!roleData) throw new ResourceNotUpdatedError("role not updated");
+  res.status(200).send({ message: "role updated", data: roleData });
+  next();
+}
 
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
+const deleteRole = async (req: Request, res: Response, next: NextFunction) => {
+  if (!req.params.id) throw new PropertyRequiredError("role id is required");
+  const roleData = await new RoleService().deleteRole(req.params.id);
+  if (!roleData) throw new ResourceNotDeletedError("role not deleted");
+  res.status(200).send({ message: "role  deleted", data: roleData });
+  next();
 }
 
 export default {
+  getRoles,
   getRoleByID,
   createRole,
   updateRole,

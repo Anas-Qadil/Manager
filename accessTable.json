@@ -1,0 +1,28 @@
+{
+	"permissions": [
+    { "name": "getPermissionByID" },
+    { "name": "createPermission" },
+    { "name": "updatePermission" },
+    { "name": "deletePermission" },
+
+    { "name": "getGuestRoleByID" },
+    { "name": "getAllGuestRoles" },
+    { "name": "createGuestRole" },
+    { "name": "updateGuestRole" },
+    { "name": "getRolesByUser" },
+    { "name": "deleteGuestRole" },
+
+    { "name": "getAllRole" },
+    { "name": "getRoleByID" },
+    { "name": "createRole" },
+    { "name": "updateRole" },
+    { "name": "deleteRole" },
+
+    { "name": "getAllGuests" },
+    { "name": "getGuestByID" },
+    { "name": "deleteGuest" },
+    { "name": "updateGuest" }
+    
+
+  ]
+}
