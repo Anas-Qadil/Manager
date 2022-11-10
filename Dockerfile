@@ -1,4 +1,4 @@
-FROM node:v16.17.0-alpine3.14
+FROM node:12
 
 # Create app directory
 WORKDIR /back-office-plus
