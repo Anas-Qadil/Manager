@@ -3,6 +3,7 @@ import controller from "../../../controllers/authorization/guest_role";
 import middleware from "../../../middlewares/authorization/guest_role";
 import check_access from '../../../middlewares/authorization/access';
 import asyncHandler from "express-async-handler"
+import log from '../../../middlewares/log';
 
 const router = express.Router();
 
@@ -11,11 +12,11 @@ const router = express.Router();
 // get logged in user role 
 router.get("/", asyncHandler(controller.getGuestRole));
 
+// get all guest roles
+router.get("/all", check_access("getAllGuestRoles"), asyncHandler(controller.getAllGuestRoles), log);
+
 // get guest role by id
 router.get("/:id", check_access("getGuestRoleByID"), asyncHandler(controller.getGuestRoleByID));
-
-// get all guest roles
-// router.get("/all", check_access("getAllGuestRoles"), asyncHandler(controller.getAllGuestRoles));
 
 // create guest role
 router.post("/", check_access("createGuestRole"), asyncHandler(middleware.createGuestRole), asyncHandler(controller.createGuestRole));

@@ -99,3 +99,25 @@ export class UnexpectedError extends Error {
     this.stack = (<any> new Error()).stack;
   }
 }
+
+// bad request custom error
+export class BadRequestError extends Error {
+  statusCode: number;
+  constructor (message: string) {
+    super(message);
+    this.statusCode = 400;
+    this.name = "BadRequestError";
+    this.stack = (<any> new Error()).stack;
+  }
+}
+
+// Invalid Credentials custom error
+export class InvalidCredentialsError extends Error {
+  statusCode: number;
+  constructor (message: string) {
+    super(message);
+    this.statusCode = 400;
+    this.name = "InvalidCredentialsError";
+    this.stack = (<any> new Error()).stack;
+  }
+}

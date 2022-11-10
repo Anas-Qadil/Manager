@@ -1,5 +1,5 @@
 import { RequestHandler, NextFunction, Request, Response } from "express";
-import { hashPassword } from "../../../utils";
+import { hashPassword } from "../../utils";
 
 const signUpMiddleware: RequestHandler = async (req: Request, res: Response, next: NextFunction) => {
 	try {
@@ -23,7 +23,7 @@ const signUpMiddleware: RequestHandler = async (req: Request, res: Response, nex
     req.body.password = await hashPassword(data.password);
     next();
   } catch (e) {
-	res.status(500).send({ message: "Internal server error." });
+	  res.status(500).send({ message: "Internal server error." });
   }
 }
 

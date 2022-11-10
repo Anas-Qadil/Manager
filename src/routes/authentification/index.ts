@@ -3,6 +3,7 @@ import { signInController } from '../../controllers/authentification/sign-in';
 import { signInMiddleware } from '../../middlewares/authentification/sign-in';
 import { signUpController } from '../../controllers/authentification/sign-up';
 import { signUpMiddleware } from '../../middlewares/authentification/sign-up';
+import asyncHandler from 'express-async-handler';
 import "../../configs/passport";
 import passport from "passport"
 
@@ -11,8 +12,8 @@ const passportJWTSignIn    = passport.authenticate("jwt", { session: false });
 const router = express.Router();
 
 // set up routes
-router.post('/sign-in', passportLocalSignIn, signInMiddleware, signInController);
-router.post("/authorize", passportJWTSignIn, signInMiddleware, signInController);
-router.post("/sign-up", passportJWTSignIn, signUpMiddleware, signUpController);
+router.post('/sign-in', passportLocalSignIn, asyncHandler(signInMiddleware), asyncHandler(signInController));
+router.post("/authorize", passportJWTSignIn, asyncHandler(signInMiddleware), asyncHandler(signInController));
+router.post("/sign-up", passportJWTSignIn, signUpMiddleware, asyncHandler(signUpController));
 
 export default router;

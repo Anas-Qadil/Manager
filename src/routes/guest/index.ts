@@ -11,9 +11,9 @@ const router = express.Router();
 
 // get logged in guest
 router.get("/", asyncHandler(getGuest));
-
+ 
 // get all guests
-// router.get("/all", check_access("getAllGuests"), asyncHandler(getGuests), log);
+router.route("/all").get(asyncHandler(getGuests), log);
 
 // get guest by id
 router.get("/:id", check_access("getGuestByID"), asyncHandler(getGuestByID));

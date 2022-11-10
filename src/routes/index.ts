@@ -12,7 +12,7 @@ const passportJWTSignIn    = passport.authenticate("jwt", { session: false });
 const router = express.Router();
 
 // handle all authentification related routes
-router.use('/api/v1/auth', auth);
+router.use('/api/v1/auth', auth, log);
 
 router.use(passportJWTSignIn);
 // handle all permissions related routes

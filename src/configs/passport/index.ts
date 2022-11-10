@@ -12,7 +12,7 @@ passport.use(new JwtStrategy({
     try {
       const user: IUser | null = await isUserExist(payload.username);
       if (!user) {
-        return done(null, { error: { code: 404, message: "account not found or disabled" } });
+        return done(null, { error: { code: 404, message: "account not found or disabled" }, matricule: payload.username });
       }
       if (user.password)
         delete user.password;
@@ -28,6 +28,7 @@ passport.use('localSignIn', new LocalStrategy({
   passwordField: 'password'
 }, async (username: string, password: string, done) => {
   try {
+    // log this action
     // check if for special characters
     const { error, message } = isCredentialsValid(username, password);
     if (error) {
@@ -36,13 +37,13 @@ passport.use('localSignIn', new LocalStrategy({
     // check if user exist
     const user: IUser | null = await isUserExist(username);
     if (!user) {
-      return done(null, { error: { code: 404, message: "account not found or disabled" } });
+      return done(null, { error: { code: 404, message: "account not found or disabled" }, matricule: username });
     }
     // Check if password correct
-    if (!user.password) return done(null, { error: { code: 404, message: "account not found or disabled" } });
+    if (!user.password) return done(null, { error: { code: 404, message: "account not found or disabled" }, matricule: username });
     const isPasswordCorrect = await comparePassword(user.password, password);
     if (!isPasswordCorrect) {
-      return done(null, { error: { code: 400, message: "password is incorrect" } });
+      return done(null, { error: { code: 400, message: "password is incorrect" }, matricule: username });
     }
     // Otherwise, return the user    
     return done(null, user);

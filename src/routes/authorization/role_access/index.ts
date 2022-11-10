@@ -3,6 +3,7 @@ import controller from "../../../controllers/authorization/role_access";
 import middleware from "../../../middlewares/authorization/role_access";
 import check_access from "../../../middlewares/authorization/access";
 import asyncHandler from "express-async-handler"
+import log from '../../../middlewares/log';
 
 const router = express.Router();
 
@@ -12,7 +13,7 @@ const router = express.Router();
 router.get("/", asyncHandler(controller.getRoles));
 
 // get all roles
-// router.get("/all", check_access("getAllRole"), asyncHandler(controller.getAllRole));
+router.get("/all", check_access("getAllRole"), asyncHandler(controller.getAllRole), log);
 
 // get role  of a specific user
 router.get("/:id", check_access("getRoleByID"), asyncHandler(controller.getRoleByID));
