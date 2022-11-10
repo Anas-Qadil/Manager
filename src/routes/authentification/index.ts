@@ -11,7 +11,7 @@ const passportLocalSignIn  = passport.authenticate("localSignIn", { session: fal
 const passportJWTSignIn    = passport.authenticate("jwt", { session: false });
 const router = express.Router();
 
-// set up routes
+// [ROUTE] /api/v1/auth/sign-in
 router.post('/sign-in', passportLocalSignIn, asyncHandler(signInMiddleware), asyncHandler(signInController));
 router.post("/authorize", passportJWTSignIn, asyncHandler(signInMiddleware), asyncHandler(signInController));
 router.post("/sign-up", passportJWTSignIn, signUpMiddleware, asyncHandler(signUpController));
