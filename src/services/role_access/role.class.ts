@@ -4,7 +4,7 @@ export default class RoleService {
 
   public async getRoles(userID: string) {
     try {
-      const data: any = await prisma.user_role.findFirst({
+      const data: any = await prisma.user_role.findMany({
         where: {
           guestID: userID,
         },
@@ -18,8 +18,10 @@ export default class RoleService {
         },
       });
       const roles: any = [];
-      data.role.map((role: any) => {
-        roles.push(role);
+      data.map((doc: any) => {
+        doc.role.map((role: any) => {
+          roles.push(role);
+        });
       });
       return roles;
     } catch (e) {
