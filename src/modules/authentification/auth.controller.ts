@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { generateToken } from "../../configs/passport/passport.service";
 import { UnexpectedError, BadRequestError } from "../../commen/exceptions/exceptions.class";
-import GuestService from "../../models/agent/agent.service";
+import GuestService from "../../modules/agent/agent.service";
 
 export const signInController = (req: Request, res: Response, next: NextFunction) => {
   const {error, token} = generateToken(req.user);

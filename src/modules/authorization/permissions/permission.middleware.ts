@@ -3,18 +3,6 @@ import { validString } from "../../../commen/helpers/helpers";
 import { IPermission } from "../../../interfaces";
 import { ValidationError, PropertyRequiredError } from "../../../commen/exceptions/exceptions.class";
 
-// TODO: check if user has access to the specific route
-const hasAccess = (req: Request, res: Response, next: NextFunction) => {
-	try {
-    console.log("hasAccess");
-    next();
-  } catch (err) {
-    res.status(500).send({
-      message: "internal server error",
-    });
-  }
-}
-
 const getPermissionByID = async (req: Request, res: Response, next: NextFunction) => {
   try {
     next();
@@ -53,7 +41,6 @@ const deletePermission = (req: Request, res: Response, next: NextFunction) => {
 }
 
 export default {
-  hasAccess,
   getPermissionByID,
   createPermission,
   updatePermission,

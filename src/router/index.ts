@@ -1,10 +1,10 @@
 import express from 'express';
-import auth from '../models/authentification/auth.Route';
-import permissions from '../models/authorization/permissions/permission.route'
-import roles from '../models/authorization/roles/role.route'
-import agent from '../models/agent/agent.route'
+import auth from '../modules/authentification/auth.Route';
+import permissions from '../modules/authorization/permissions/permission.route'
+import roles from '../modules/authorization/roles/role.route'
+import agent from '../modules/agent/agent.route'
 import passport from 'passport';
-import agentRole from "../models/authorization/agent-role/agentRole.route";
+import agentRole from "../modules/authorization/agent-role/agentRole.route";
 import errorHandler from '../commen/exceptions/error.handler';
 import log from '../commen/logger/logger.service';
 
