@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 dotenv.config();
 import express, { Express } from 'express';
 import morgan from 'morgan';
-import Router from "./src/routes/index"
+import Router from "./src/router/index"
 import cors from 'cors';
 import halmet from 'helmet';
 import passport from "passport";

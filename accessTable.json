@@ -1,5 +1,6 @@
 {
 	"permissions": [
+    
     { "name": "getPermissionByID" },
     { "name": "createPermission" },
     { "name": "updatePermission" },
@@ -23,6 +24,5 @@
     { "name": "deleteGuest" },
     { "name": "updateGuest" }
     
-
   ]
 }

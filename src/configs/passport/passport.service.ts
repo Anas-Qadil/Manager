@@ -1,4 +1,4 @@
-import prisma from '../../prisma/connection';
+import prisma from '../../../prisma/connection';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 

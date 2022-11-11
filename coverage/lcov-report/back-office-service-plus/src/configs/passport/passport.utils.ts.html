@@ -23,30 +23,30 @@
         <div class='clearfix'>
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">34.48% </span>
+                <span class="strong">86.2% </span>
                 <span class="quiet">Statements</span>
-                <span class='fraction'>10/29</span>
+                <span class='fraction'>25/29</span>
+            </div>
+        
+            
+            <div class='fl pad1y space-right2'>
+                <span class="strong">60% </span>
+                <span class="quiet">Branches</span>
+                <span class='fraction'>3/5</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
                 <span class="strong">100% </span>
-                <span class="quiet">Branches</span>
-                <span class='fraction'>0/0</span>
-            </div>
-        
-            
-            <div class='fl pad1y space-right2'>
-                <span class="strong">0% </span>
                 <span class="quiet">Functions</span>
-                <span class='fraction'>0/1</span>
+                <span class='fraction'>1/1</span>
             </div>
         
             
             <div class='fl pad1y space-right2'>
-                <span class="strong">34.48% </span>
+                <span class="strong">86.2% </span>
                 <span class="quiet">Lines</span>
-                <span class='fraction'>10/29</span>
+                <span class='fraction'>25/29</span>
             </div>
         
             
@@ -61,7 +61,7 @@
             </div>
         </template>
     </div>
-    <div class='status-line low'></div>
+    <div class='status-line high'></div>
     <pre><table class="coverage">
 <tr><td class="line-count quiet"><a name='L1'></a><a href='#L1'>1</a>
 <a name='L2'></a><a href='#L2'>2</a>
@@ -97,25 +97,25 @@
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-no">&nbsp;</span>
 <span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
-<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">1x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
+<span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
 <span class="cline-any cline-yes">1x</span>
@@ -124,26 +124,26 @@
   message: string;
 }
 &nbsp;
-const isCredentialsValid = <span class="fstat-no" title="function not covered" >(username: string, password: string): IVerifyOptions =&gt; {</span>
-<span class="cstat-no" title="statement not covered" >  const format = /[ `!#$%^&amp;*()+\-=\[\]{};':"\\|,&lt;&gt;\/?~]/</span>
-<span class="cstat-no" title="statement not covered" >  let checker: number = 0;</span>
-<span class="cstat-no" title="statement not covered" >  let message: string = "";</span>
-<span class="cstat-no" title="statement not covered" ></span>
-<span class="cstat-no" title="statement not covered" >  if (username.length &gt; 50 || password.length &gt; 50) {</span>
+const isCredentialsValid = (username: string, password: string): IVerifyOptions =&gt; {
+  const format = /[ `!#$%^&amp;*()+\-=\[\]{};':"\\|,&lt;&gt;\/?~]/
+  let checker: number = 0;
+  let message: string = "";
+&nbsp;
+  if (username.length &gt; 50 || password.length &gt; 50) <span class="branch-0 cbranch-no" title="branch not covered" >{</span>
 <span class="cstat-no" title="statement not covered" >    checker = 1;</span>
 <span class="cstat-no" title="statement not covered" >    message = "username or password is too long";</span>
-<span class="cstat-no" title="statement not covered" >  } else if (username.length &lt; 3 || password.length &lt; 3) { </span>
+  } else if (username.length &lt; 3 || password.length &lt; 3) <span class="branch-0 cbranch-no" title="branch not covered" >{ </span>
 <span class="cstat-no" title="statement not covered" >    checker = 1;</span>
 <span class="cstat-no" title="statement not covered" >    message = "username or password is too short";</span>
-<span class="cstat-no" title="statement not covered" >  } else if (format.test(username) || format.test(password)){</span>
-<span class="cstat-no" title="statement not covered" >    checker = 1;</span>
-<span class="cstat-no" title="statement not covered" >    message = "username or password contains invalid characters";</span>
-<span class="cstat-no" title="statement not covered" >  }</span>
-<span class="cstat-no" title="statement not covered" >  return ({</span>
-<span class="cstat-no" title="statement not covered" >    error: checker,</span>
-<span class="cstat-no" title="statement not covered" >    message: message</span>
-<span class="cstat-no" title="statement not covered" >  });</span>
-<span class="cstat-no" title="statement not covered" >}</span>
+  } else if (format.test(username) || format.test(password)){
+    checker = 1;
+    message = "username or password contains invalid characters";
+  }
+  return ({
+    error: checker,
+    message: message
+  });
+}
 &nbsp;
 export {
   isCredentialsValid
@@ -154,7 +154,7 @@ export {
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2022-11-02T11:01:39.009Z
+                at 2022-11-11T10:12:04.279Z
             </div>
         <script src="../../../../prettify.js"></script>
         <script>
