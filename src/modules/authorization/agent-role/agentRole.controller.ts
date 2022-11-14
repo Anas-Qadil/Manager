@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { IUser } from "../../../interfaces";
+import { IUser } from "../../../commen/interfaces";
 import GuestRoleService from "./agentRole.service";
 import { PropertyRequiredError, NotFoundError, ResourceNotCreatedError, ResourceNotDeletedError, ResourceNotUpdatedError } from "../../../commen/exceptions/exceptions.class";
 

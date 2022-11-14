@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from 'express';
-import { IUser } from '../../interfaces';
+import { IUser } from '../../commen/interfaces';
 import GuestService from './agent.service';
-import { PropertyRequiredError, UnexpectedError, NotFoundError, ResourceNotCreatedError, ResourceNotDeletedError, ResourceNotUpdatedError } from "../../commen/exceptions/exceptions.class";
+import { PropertyRequiredError, UnexpectedError, NotFoundError, ResourceNotUpdatedError } from "../../commen/exceptions/exceptions.class";
 
 // get logged in guest
 const getGuest = async (req: Request, res: Response, next: NextFunction) => {

@@ -7,7 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model guests {
+model agents {
   id        String  @id @default(auto()) @map("_id") @db.ObjectId
   active    Boolean @default(true)
   archive   Boolean @default(false)
@@ -19,55 +19,56 @@ model guests {
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  role         user_role[] @relation("role")
-  asigned      user_role[] @relation("asignee")
-  creator      guests?     @relation("guestCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  guests       guests[]    @relation("guestCreator")
-  rolesCreated Roles[]     @relation("roleCreator")
+  role         backOfficeRoles[] @relation("role")
+  asigned      backOfficeRoles[] @relation("asignee")
+  creator      agents?     @relation("guestCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  agents       agents[]    @relation("guestCreator")
+  rolesCreated agentRoles[]     @relation("roleCreator")
 
-  @@map("guests")
+  profile      Profile[] 
+  @@map("agents")
 }
 
-model user_role {
+model backOfficeRoles {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
   archive Boolean @default(false)
 
   guestID String? @db.ObjectId
-  guest   guests? @relation("role", fields: [guestID], references: [id])
+  guest   agents? @relation("role", fields: [guestID], references: [id])
 
   assignedBy  String? @db.ObjectId
-  assignedBy_ guests? @relation("asignee", fields: [assignedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  assignedBy_ agents? @relation("asignee", fields: [assignedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   roleID String[] @db.ObjectId
-  role   Roles[]  @relation(fields: [roleID], references: [id])
+  role   agentRoles[]  @relation(fields: [roleID], references: [id])
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  @@map("guest_user_role")
+  @@map("backOffice_roles")
 }
 
-model Roles {
+model agentRoles {
   id      String  @id @default(auto()) @map("_id") @db.ObjectId
   archive Boolean @default(false)
   name    String
 
   user_role  String[]    @db.ObjectId
-  user_role_ user_role[] @relation(fields: [user_role], references: [id])
+  user_role_ backOfficeRoles[] @relation(fields: [user_role], references: [id])
 
   permissionIDs String[]      @db.ObjectId
-  permissions   Permissions[] @relation(fields: [permissionIDs], references: [id])
+  permissions   agentPermissions[] @relation(fields: [permissionIDs], references: [id])
 
   creatorID String? @db.ObjectId
-  creator   guests? @relation("roleCreator", fields: [creatorID], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  creator   agents? @relation("roleCreator", fields: [creatorID], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  @@map("guest_roles")
+  @@map("agent_roles")
 }
 
-model Permissions {
+model agentPermissions {
   id          String  @id @default(auto()) @map("_id") @db.ObjectId
   name        String
   archive     Boolean @default(false)
@@ -77,9 +78,9 @@ model Permissions {
   updatedAt DateTime? @updatedAt
 
   roleIDs String[] @db.ObjectId
-  role    Roles[]  @relation(fields: [roleIDs], references: [id])
+  role    agentRoles[]  @relation(fields: [roleIDs], references: [id])
 
-  @@map("guest_permissions")
+  @@map("agent_permissions")
 }
 
 model syslog {
@@ -107,14 +108,279 @@ model syslog {
   @@map("syslog")
 }
 
-// enum access {
-//   READ
-//   WRITE
-//   DELETE
-//   UPDATE
-// }
-
 enum log_level {
   ERROR
   SUCCESS
 }
+
+
+// -------------------------- Web Client Schemas -------------------------- //
+
+model User {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  phone    String  @unique
+  email    String  @unique
+  password String
+  country  Country @default(MOROCCO)
+  regime   Regime  @default(TPE)
+
+  activated   Boolean   @default(false)
+  activatedAt DateTime?
+
+  archived   Boolean   @default(false)
+  archivedAt DateTime?
+
+  emailVerifiedAt DateTime?
+  phoneVerifiedAt DateTime?
+
+  profile Profile?
+
+  tokens Token[]
+
+  companies Company[]
+
+  demands Demand[]
+
+  roles       UserRole[]
+  permissions UserPermission[]
+
+  createdRoles Role[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Token {
+  id      String    @id @default(auto()) @map("_id") @db.ObjectId
+  token   String
+  type    TokenType
+  expires Int
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([token, type])
+  @@map("tokens")
+}
+
+model Profile {
+  id               String  @id @default(auto()) @map("_id") @db.ObjectId
+  ref              String?
+  fullName         String?
+  idCardNumber     String
+  idCardExpiryDate String
+  dateOfBirth      String
+  placeOfBirth     String
+  nationality      String
+  gender           Gender
+  city             String
+  address          String
+  imageUrl         String?
+  archive          Boolean @default(false)
+
+  agentID          String? @db.ObjectId
+  agent            agents? @relation(fields: [agentID], references: [id])
+
+  userId String? @unique @db.ObjectId
+  user   User?   @relation(fields: [userId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("profiles")
+}
+
+model Collaborator {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  companyId String  @db.ObjectId
+  company   Company @relation(fields: [companyId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("collaborators")
+}
+
+model Company {
+  id          String @id @default(auto()) @map("_id") @db.ObjectId
+  title       String
+  description String
+
+  ownerId String @db.ObjectId
+  owner   User   @relation(fields: [ownerId], references: [id])
+
+  collaborators Collaborator[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("companies")
+}
+
+model Demand {
+  id      String     @id @default(auto()) @map("_id") @db.ObjectId
+  type    DemandType
+  status  Status     @default(PENDING)
+  comment String?
+
+  userId String
+  user   User   @relation(fields: [userId], references: [id])
+
+  documents Document[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("demands")
+}
+
+model Document {
+  id      String       @id @default(auto()) @map("_id") @db.ObjectId
+  url     String
+  type    DocumentType
+  status  Status       @default(PENDING)
+  comment String?
+
+  demandId String @db.ObjectId
+  demand   Demand @relation(fields: [demandId], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("documents")
+}
+
+model Role {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  code        String
+  description String?
+
+  createdBy String @db.ObjectId
+  creator   User   @relation(fields: [createdBy], references: [id])
+
+  users UserRole[]
+
+  permissionsIDs String[]         @db.ObjectId
+  permissions    UserPermission[] @relation(fields: [permissionsIDs], references: [id])
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([id, createdBy])
+  @@map("roles")
+}
+
+model UserRole {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  roleId String @db.ObjectId
+  role   Role   @relation(fields: [roleId], references: [id])
+
+  assignedBy String   @db.ObjectId
+  assignedAt DateTime @default(now())
+
+  @@map("users_roles")
+}
+
+model UserPermission {
+  id String @id @default(auto()) @map("_id") @db.ObjectId
+
+  userId String @db.ObjectId
+  user   User   @relation(fields: [userId], references: [id])
+
+  permissionId String     @db.ObjectId
+  permission   Permission @relation(fields: [permissionId], references: [id])
+
+  entityId String? @db.ObjectId
+
+  rolesIDs String[] @db.ObjectId
+  roles    Role[]   @relation(fields: [rolesIDs], references: [id])
+
+  assignedBy String   @db.ObjectId
+  assignedAt DateTime @default(now())
+
+  @@map("users_permissions")
+}
+
+model Permission {
+  id          String  @id @default(auto()) @map("_id") @db.ObjectId
+  code        String  @unique
+  description String?
+
+  users UserPermission[]
+
+  @@map("permissions")
+}
+
+enum Regime {
+  TPE
+  CPU
+  AE
+}
+
+enum UserType {
+  TPE
+  CPU
+  AE
+  COLLABORATOR
+}
+
+enum Country {
+  MOROCCO
+  EGYPT
+}
+
+enum DocumentType {
+  ID_CARD
+  ID_CARD_RECTO
+  ID_CARD_VERSO
+  COMMERCE_REGISTER
+  TAX
+  FINANCE
+  RIB
+  ANTHROPOMETRIC
+  DIPLOMA
+  CNSS
+  MARRIAGE_CERTIFICATE
+  BIRTH_CERTIFICATE
+  BANK_CHECK
+  FACTURE
+  TICKET
+  RECEIPT
+  ASSET
+}
+
+enum DemandType {
+  REGISTRATION
+  ADD_COMPANY
+  ADD_COLLABORATOR
+  ADD_BANK
+}
+
+enum Status {
+  PENDING
+  VERIFIED
+  DECLINED
+}
+
+enum Gender {
+  M
+  F
+}
+
+enum TokenType {
+  REFRESH
+  RESET_PASSWORD
+  EMAIL_VERIFICATION
+}
+
+

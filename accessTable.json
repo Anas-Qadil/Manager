@@ -22,7 +22,12 @@
     { "name": "getAllGuests" },
     { "name": "getGuestByID" },
     { "name": "deleteGuest" },
-    { "name": "updateGuest" }
+    { "name": "updateGuest" },
+    
+    { "name": "getUserProfileByID" },
+    { "name": "createUserProfile" },
+    { "name": "updateUserProfile" },
+    { "name": "deleteUserProfile" }
     
   ]
 }

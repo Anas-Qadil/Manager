@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { validString } from "../../../commen/helpers/helpers";
-import { IPermission } from "../../../interfaces";
+import { IPermission } from '../../../commen/interfaces';
 import { ValidationError, PropertyRequiredError } from "../../../commen/exceptions/exceptions.class";
 
 const getPermissionByID = async (req: Request, res: Response, next: NextFunction) => {

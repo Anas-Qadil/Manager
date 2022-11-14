@@ -1,7 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import RoleService from "./role.service";
 import { PropertyRequiredError, NotFoundError, ResourceNotCreatedError, ResourceNotDeletedError, ResourceNotUpdatedError } from "../../../commen/exceptions/exceptions.class";
-import { IUser } from "../../../interfaces";
+import { IUser } from "../../../commen/interfaces";
 
 // get logged in user roles
 const getRoles = async (req: Request, res: Response, next: NextFunction) => {

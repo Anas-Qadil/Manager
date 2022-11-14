@@ -4,7 +4,7 @@ export default class GuestRoleService {
 
   public async getGuestRole(guestID: string) {
     try {
-      return await prisma.user_role.findFirst({
+      return await prisma.backOfficeRoles.findFirst({
         where: {
           guestID: guestID,
         },
@@ -23,7 +23,7 @@ export default class GuestRoleService {
 
   public async getAllGuestRoles() {
     try {
-      return await prisma.user_role.findMany({
+      return await prisma.backOfficeRoles.findMany({
         where: {
           archive: false,
         },
@@ -56,7 +56,7 @@ export default class GuestRoleService {
 
   public async getGuestRoleByID(id: string) {
     try {
-      return await prisma.user_role.findUnique({
+      return await prisma.backOfficeRoles.findUnique({
         where: {
           id: id,
         },
@@ -89,7 +89,7 @@ export default class GuestRoleService {
 
   public async createGuestRole(data: any) {
     try {
-      return await prisma.user_role.create({
+      return await prisma.backOfficeRoles.create({
         data: data,
       });
     } catch (e) {
@@ -99,7 +99,7 @@ export default class GuestRoleService {
 
   public async updateGuestRole(id: string, data: any) {
     try {
-      const archived = await prisma.user_role.update({
+      const archived = await prisma.backOfficeRoles.update({
         where: {
           id: id,
         },
@@ -108,7 +108,7 @@ export default class GuestRoleService {
         },
       });
       if (archived) {
-        return await prisma.user_role.update({
+        return await prisma.backOfficeRoles.update({
           where: {
             id: id,
           },
@@ -122,7 +122,7 @@ export default class GuestRoleService {
 
   public async deleteGuestRole(id: string) {
     try {
-      return await prisma.user_role.update({
+      return await prisma.backOfficeRoles.update({
         where: {
           id: id,
         },

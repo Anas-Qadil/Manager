@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from "express";
-import { IUser } from "../../../interfaces";
+import { IUser } from "../../../commen/interfaces";
 
 const createGuestRole = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user as IUser;

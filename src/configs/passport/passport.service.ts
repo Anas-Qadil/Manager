@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 
 const isUserExist = async (username: string) => {
-  const user = await prisma.guests.findFirst({
+  const user = await prisma.agents.findFirst({
     where: {
       username: username,
       archive: false,

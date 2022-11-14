@@ -3,7 +3,7 @@ import { Strategy as JwtStrategy, ExtractJwt } from "passport-jwt";
 import { Strategy as LocalStrategy } from "passport-local"
 import { isCredentialsValid } from "./passport.utils";
 import { isUserExist, comparePassword } from "./passport.service";
-import { IUser } from "../../interfaces";
+import { IUser } from '../../commen/interfaces';
 
 passport.use(new JwtStrategy({
 	jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),

@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction, RequestHandler } from 'express';
-import { IUser } from '../../interfaces';
+import { IUser } from '../interfaces';
 import { PermissionsService } from '../../modules/authorization/permissions/permission.service';
 import asyncHandler from 'express-async-handler';
 import { ForbiddenError } from '../exceptions/exceptions.class';

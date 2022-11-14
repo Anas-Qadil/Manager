@@ -1,11 +1,11 @@
 import prisma from "../../../../prisma/connection";
-import { IPermission } from "../../../interfaces";
+import { IPermission } from '../../../commen/interfaces'
 
 export class PermissionsService {
 	public async getPermissionByID(id: string) {
     try {
       if (!id) return null;
-      return await prisma.permissions.findUnique({
+      return await prisma.agentPermissions.findUnique({
         where: {
           id: id,
         },
@@ -18,7 +18,7 @@ export class PermissionsService {
   public async getUserPermissions(id: string) {
     try {
       if (!id) return null;
-      const data: any = await prisma.user_role.findFirst({
+      const data: any = await prisma.backOfficeRoles.findFirst({
         where: {
           guestID : id,
         },
@@ -36,7 +36,6 @@ export class PermissionsService {
           },
         },
       });
-
       const permissions: any = [];
       data.role.map((role: any) => {
         const permission = role.permissions.map((permission: any) => {
@@ -52,7 +51,7 @@ export class PermissionsService {
 
   public async createPermission(data: any) {
     try {
-      return await prisma.permissions.create({
+      return await prisma.agentPermissions.create({
         data: data,
       });
     } catch (e) {
@@ -63,7 +62,7 @@ export class PermissionsService {
   public async updatePermission(id: string, data: IPermission) {
     try {
       if (!id) return null;
-      const archived = await prisma.permissions.update({
+      const archived = await prisma.agentPermissions.update({
         where: {
           id: id,
         },
@@ -75,7 +74,7 @@ export class PermissionsService {
       if (archived) {
         if (!data.name) data.name = archived.name || "";
         if (!data.description) data.description = archived.description || "";
-        return await prisma.permissions.create({
+        return await prisma.agentPermissions.create({
           data: data
         });
       }
@@ -87,7 +86,7 @@ export class PermissionsService {
   public async deletePermission(id: string) {
     try {
       if (!id) return null;
-      return await prisma.permissions.update({
+      return await prisma.agentPermissions.update({
         where: {
           id: id,
         },
@@ -102,7 +101,7 @@ export class PermissionsService {
 
   public async hasPermission(id: string, permission: string) {
     try {
-      return await prisma.permissions.count({
+      return await prisma.agentPermissions.count({
         where: {
           name: permission,
           role:{

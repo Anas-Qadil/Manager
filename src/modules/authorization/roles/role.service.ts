@@ -4,7 +4,7 @@ export default class RoleService {
 
   public async getRoles(userID: string) {
     try {
-      const data: any = await prisma.user_role.findMany({
+      const data: any = await prisma.backOfficeRoles.findMany({
         where: {
           guestID: userID,
         },
@@ -31,7 +31,7 @@ export default class RoleService {
 
 	public async getAllRole() {
     try {
-      return await prisma.roles.findMany({
+      return await prisma.agentRoles.findMany({
         where: {
           archive: false,
         },
@@ -55,7 +55,7 @@ export default class RoleService {
 
   public async getRoleByID(id: string) {
     try {
-      return await prisma.roles.findUnique({
+      return await prisma.agentRoles.findUnique({
         where: {
           id: id,
         },
@@ -79,7 +79,7 @@ export default class RoleService {
 
   public async createRole(data: any) {
     try {
-      return await prisma.roles.create({
+      return await prisma.agentRoles.create({
         data: data,
       });
     } catch (e) {
@@ -90,7 +90,7 @@ export default class RoleService {
 
   public async updateRole(id: string, data: any) {
     try {
-      const archivedRole = await prisma.roles.update({
+      const archivedRole = await prisma.agentRoles.update({
         where: {
           id: id,
         },
@@ -99,7 +99,7 @@ export default class RoleService {
         },
       });
       if (archivedRole) {
-        return await prisma.roles.create({
+        return await prisma.agentRoles.create({
           data: data,
         });
       }
@@ -111,7 +111,7 @@ export default class RoleService {
 
   public async deleteRole(id: string) {
     try {
-      return await prisma.roles.update({
+      return await prisma.agentRoles.update({
         where: {
           id: id,
         },

@@ -9,7 +9,7 @@ export default class GuestService {
   
  public getGuests = async (): Promise<Guest> => {
     try {
-      const guest =  await prisma.guests.findMany({
+      const guest =  await prisma.agents.findMany({
         where: {
           archive: false,
         },
@@ -31,7 +31,7 @@ export default class GuestService {
 
   public getGuestByID = async (id: string): Promise<Guest> => {
     try {
-      const guest = await prisma.guests.findUnique({
+      const guest = await prisma.agents.findUnique({
         where: {
           id: id,
         },
@@ -54,7 +54,7 @@ export default class GuestService {
 
   public createGuest = async (data: any): Promise<Guest> => {
     try {
-      const guest =  await prisma.guests.create({
+      const guest =  await prisma.agents.create({
         data: data,
       });
       return {
@@ -72,7 +72,7 @@ export default class GuestService {
 
   public updateGuest = async (id: string, data: any): Promise<Guest> => {
     try {
-      const guest = await prisma.guests.update({
+      const guest = await prisma.agents.update({
         where: {
           id: id,
         },
@@ -92,7 +92,7 @@ export default class GuestService {
 
   public deleteGuest = async (id: string): Promise<Guest> => {
     try {
-      const guest = await prisma.guests.update({
+      const guest = await prisma.agents.update({
         where: {
           id: id,
         },

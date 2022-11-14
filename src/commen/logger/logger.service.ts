@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { IUser } from '../../interfaces';
+import { IUser } from '../interfaces';
 import LogService from './logger.class';
 
 // log middleware
