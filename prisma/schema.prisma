@@ -120,14 +120,11 @@ model bankAccount {
   agentID String? @db.ObjectId
   agent   agents? @relation(fields: [agentID], references: [id])
 
-  companyID String? @db.ObjectId
+  companyID String?  @db.ObjectId
   company   Company? @relation(fields: [companyID], references: [id])
 
   userID String? @db.ObjectId
-  user   User? @relation(fields: [userID], references: [id])
-
-  ownerID   String? @db.ObjectId
-  ownerType String
+  user   User?   @relation(fields: [userID], references: [id])
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -136,21 +133,21 @@ model bankAccount {
 }
 
 model bankDoc {
-  id       String  @id @default(auto()) @map("_id") @db.ObjectId
-  archive  Boolean @default(false)
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  archive Boolean @default(false)
   url     String
-  status   String
-  motif    String
-  comment  String
+  status  String  @default("pending")
+  motif   String?
+  comment String?
 
   agentID String? @db.ObjectId
   agent   agents? @relation(fields: [agentID], references: [id])
 
-  companyID String? @db.ObjectId
+  companyID String?  @db.ObjectId
   company   Company? @relation(fields: [companyID], references: [id])
 
   userID String? @db.ObjectId
-  user   User? @relation(fields: [userID], references: [id])
+  user   User?   @relation(fields: [userID], references: [id])
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt

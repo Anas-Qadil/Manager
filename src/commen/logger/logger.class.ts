@@ -7,7 +7,6 @@ export default class LogService {
         data: data,
       });
     } catch (e: any) {
-      console.log(e.message)
       return null;
     }
   }
