@@ -1,23 +1,52 @@
 import prisma from "../../../prisma/connection";
 
 export default class CompanyService {
-	public async getCompany(id: string) {
-		// @TODO: get company by id
+	public async getCompanies(page: number, limit: number) {
+		const companies = await prisma.company.findMany({
+			where: {
+				archive: false,
+			},
+			skip: (page - 1) * limit,
+			take: limit,
+		});
+		return (companies);
 	}
 
-	public async getAllCompanies() {
-		// @TODO: get all companies
+	public async getCompanyByID(id: string) {
+		const company = await prisma.company.findUnique({
+			where: {
+				id: id,
+			},
+		});
+		return (company);
 	}
 
 	public async createCompany(data: any) {
-		// @TODO: create company
+		const company = await prisma.company.create({
+			data: data,
+		});
+		return (company);
 	}
 
 	public async updateCompany(id: string, data: any) {
-		// @TODO: update company
+		const company = await prisma.company.update({
+			where: {
+				id: id,
+			},
+			data: data,
+		});
+		return (company);
 	}
 
 	public async deleteCompany(id: string) {
-		// @TODO: delete company
+		const company = await prisma.company.update({
+			where: {
+				id: id,
+			},
+			data: {
+				archive: true,
+			},
+		});
+		return (company);
 	}
 }

@@ -28,6 +28,7 @@ model agents {
   profile      Profile[]
   bankAccounts bankAccount[]
   bankDocs     bankDoc[]
+  companies    Company[]
 
   @@map("agents")
 }
@@ -256,12 +257,23 @@ model Collaborator {
 }
 
 model Company {
-  id          String @id @default(auto()) @map("_id") @db.ObjectId
-  title       String
-  description String
+  id              String  @id @default(auto()) @map("_id") @db.ObjectId
+  name            String
+  address         String
+  city            String
+  country         Country
+  rc              String
+  cnssNumber      String
+  archive         Boolean @default(false)
+  idFiscal        String
+  taxNumber       String
+  companyCommunID String?
 
-  ownerId String @db.ObjectId
-  owner   User   @relation(fields: [ownerId], references: [id])
+  agentID String? @db.ObjectId
+  agent   agents? @relation(fields: [agentID], references: [id])
+
+  userID String @db.ObjectId
+  user   User   @relation(fields: [userID], references: [id])
 
   collaborators Collaborator[]
   bankAccounts  bankAccount[]
