@@ -8,6 +8,9 @@ import agentRole from "../modules/authorization/agent-role/agentRole.route";
 import errorHandler from '../commen/exceptions/error.handler';
 import log from '../commen/logger/logger.service';
 import userProfile from "../modules/userProfile/profile.route";
+import company from "../modules/company/company.route";
+import bankAccount from "../modules/bank-account/bank.route";
+
 
 const passportJWTSignIn    = passport.authenticate("jwt", { session: false });
 const router = express.Router();
@@ -30,6 +33,12 @@ router.use("/api/v1/agent", agent, log);
 
 // handle all user profile related routes
 router.use("/api/v1/user-profile", userProfile, log);
+
+// handle all company related routes
+router.use("/api/v1/company", company, log);
+
+// handle all bank account related routes
+router.use("/api/v1/bank-account", bankAccount, log);
 
 // error handling middleware
 router.use((_, res) => {

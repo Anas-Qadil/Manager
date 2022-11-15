@@ -21,11 +21,14 @@ model agents {
 
   role         backOfficeRoles[] @relation("role")
   asigned      backOfficeRoles[] @relation("asignee")
-  creator      agents?     @relation("guestCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
-  agents       agents[]    @relation("guestCreator")
-  rolesCreated agentRoles[]     @relation("roleCreator")
+  creator      agents?           @relation("guestCreator", fields: [creatorId], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  agents       agents[]          @relation("guestCreator")
+  rolesCreated agentRoles[]      @relation("roleCreator")
 
-  profile      Profile[] 
+  profile      Profile[]
+  bankAccounts bankAccount[]
+  bankDocs     bankDoc[]
+
   @@map("agents")
 }
 
@@ -39,8 +42,8 @@ model backOfficeRoles {
   assignedBy  String? @db.ObjectId
   assignedBy_ agents? @relation("asignee", fields: [assignedBy], references: [id], onDelete: NoAction, onUpdate: NoAction)
 
-  roleID String[] @db.ObjectId
-  role   agentRoles[]  @relation(fields: [roleID], references: [id])
+  roleID String[]     @db.ObjectId
+  role   agentRoles[] @relation(fields: [roleID], references: [id])
 
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
@@ -53,10 +56,10 @@ model agentRoles {
   archive Boolean @default(false)
   name    String
 
-  user_role  String[]    @db.ObjectId
+  user_role  String[]          @db.ObjectId
   user_role_ backOfficeRoles[] @relation(fields: [user_role], references: [id])
 
-  permissionIDs String[]      @db.ObjectId
+  permissionIDs String[]           @db.ObjectId
   permissions   agentPermissions[] @relation(fields: [permissionIDs], references: [id])
 
   creatorID String? @db.ObjectId
@@ -77,14 +80,14 @@ model agentPermissions {
   createdAt DateTime? @default(now())
   updatedAt DateTime? @updatedAt
 
-  roleIDs String[] @db.ObjectId
-  role    agentRoles[]  @relation(fields: [roleIDs], references: [id])
+  roleIDs String[]     @db.ObjectId
+  role    agentRoles[] @relation(fields: [roleIDs], references: [id])
 
   @@map("agent_permissions")
 }
 
 model syslog {
-  id            String   @id @default(auto()) @map("_id") @db.ObjectId
+  id            String    @id @default(auto()) @map("_id") @db.ObjectId
   dateTime      DateTime? @default(now())
   appID         String?
   event         String?
@@ -108,11 +111,57 @@ model syslog {
   @@map("syslog")
 }
 
+model bankAccount {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  bankName String
+  rib      String
+  archive  Boolean @default(false)
+
+  agentID String? @db.ObjectId
+  agent   agents? @relation(fields: [agentID], references: [id])
+
+  companyID String? @db.ObjectId
+  company   Company? @relation(fields: [companyID], references: [id])
+
+  userID String? @db.ObjectId
+  user   User? @relation(fields: [userID], references: [id])
+
+  ownerID   String? @db.ObjectId
+  ownerType String
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("bank_accounts")
+}
+
+model bankDoc {
+  id       String  @id @default(auto()) @map("_id") @db.ObjectId
+  archive  Boolean @default(false)
+  url     String
+  status   String
+  motif    String
+  comment  String
+
+  agentID String? @db.ObjectId
+  agent   agents? @relation(fields: [agentID], references: [id])
+
+  companyID String? @db.ObjectId
+  company   Company? @relation(fields: [companyID], references: [id])
+
+  userID String? @db.ObjectId
+  user   User? @relation(fields: [userID], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("bank_docs")
+}
+
 enum log_level {
   ERROR
   SUCCESS
 }
-
 
 // -------------------------- Web Client Schemas -------------------------- //
 
@@ -145,6 +194,8 @@ model User {
   permissions UserPermission[]
 
   createdRoles Role[]
+  BankAccounts bankAccount[]
+  BankDocs     bankDoc[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -183,8 +234,8 @@ model Profile {
   imageUrl         String?
   archive          Boolean @default(false)
 
-  agentID          String? @db.ObjectId
-  agent            agents? @relation(fields: [agentID], references: [id])
+  agentID String? @db.ObjectId
+  agent   agents? @relation(fields: [agentID], references: [id])
 
   userId String? @unique @db.ObjectId
   user   User?   @relation(fields: [userId], references: [id])
@@ -216,6 +267,8 @@ model Company {
   owner   User   @relation(fields: [ownerId], references: [id])
 
   collaborators Collaborator[]
+  bankAccounts  bankAccount[]
+  bankDocs      bankDoc[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -382,5 +435,3 @@ enum TokenType {
   RESET_PASSWORD
   EMAIL_VERIFICATION
 }
-
-

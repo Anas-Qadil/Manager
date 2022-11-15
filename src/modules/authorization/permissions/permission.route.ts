@@ -2,7 +2,6 @@ import express from 'express';
 import controller from './permissions.controller';
 import middleware from './permission.middleware';
 import authorize from "../../../commen/helpers/authorize";
-import log from '../../../commen/logger/logger.service';
 import asyncHandler from 'express-async-handler';
 
 const router = express.Router();
