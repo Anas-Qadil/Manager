@@ -19,9 +19,10 @@ const getCompanyByID = async (req: Request, res: Response, next: NextFunction) =
 
 const getCompanies = async (req: Request, res: Response, next: NextFunction) => {
 	const page = req.query.page ? parseInt(req.query.page as string) : 1;
-	const limit = req.query.limit ? parseInt(req.query.limit as string) : 10;
+	const limit = req.query.limit ? parseInt(req.query.limit as string) : 6;
 	const companies = await new CompanyService().getCompanies(page, limit);
-	res.status(200).send({ data: companies });
+	const count = await new CompanyService().getCompaniesCount();
+	res.status(200).send({ data: companies, count });
 	next();
 }
 

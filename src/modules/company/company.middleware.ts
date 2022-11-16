@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from "express";
 import { IUser } from "../../commen/interfaces";
-import { PropertyRequiredError, NotFoundError, ResourceNotCreatedError, ResourceNotDeletedError, ResourceNotUpdatedError } from "../../commen/exceptions/exceptions.class";
+import { PropertyRequiredError, BadRequestError, NotFoundError, ResourceNotCreatedError, ResourceNotDeletedError, ResourceNotUpdatedError } from "../../commen/exceptions/exceptions.class";
 
 const createCompany = async (req: Request, _: Response, next: NextFunction) => {
 	const user = req.user as IUser
@@ -10,6 +10,7 @@ const createCompany = async (req: Request, _: Response, next: NextFunction) => {
 	if (!data.address) throw new PropertyRequiredError("company address is required");
 	if (!data.city) throw new PropertyRequiredError("company city is required");
 	if (!data.country) throw new PropertyRequiredError("company country is required");
+	else if (data.country !== "MOROCCO" && data.country !== "EGYPT") throw new BadRequestError("company country must be MOROCCO");
 	if (!data.rc) throw new PropertyRequiredError("company rc is required");
 	if (!data.cnssNumber) throw new PropertyRequiredError("company cnssNumber is required");
 	if (!data.idFiscal) throw new PropertyRequiredError("company idFiscal is required");

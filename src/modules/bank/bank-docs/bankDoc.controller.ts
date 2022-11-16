@@ -21,7 +21,8 @@ const getBankDocs = async (req: Request, res: Response, next: NextFunction) => {
 	const page: number = req.query.page ? parseInt(req.query.page as string) : 1;
 	const limit: number = req.query.limit ? parseInt(req.query.limit as string) : 6;
 	const bankDocs = await new BankDocService().getBankDocs(page, limit);
-	res.status(200).send({ data: bankDocs });
+	const count = await new BankDocService().getBankDocsCount();
+	res.status(200).send({ data: bankDocs, count });
 	next();
 };
 

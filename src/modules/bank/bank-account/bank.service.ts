@@ -49,4 +49,13 @@ export default class BankAccountService {
 		});
 		return bankAccounts;
 	}
+
+	public async getBankAccountsCount() {
+		const count = await prisma.bankAccount.count({
+			where: {
+				archive: false,
+			},
+		});
+		return count;
+	}
 }

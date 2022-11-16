@@ -44,4 +44,13 @@ export default class BankDocService {
 		});
 		return (deleteBankDoc);
 	}
+
+	public async getBankDocsCount() {
+		const count = await prisma.bankDoc.count({
+			where: {
+				archive: false,
+			},
+		});
+		return (count);
+	}
 }

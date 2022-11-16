@@ -49,4 +49,13 @@ export default class CompanyService {
 		});
 		return (company);
 	}
+
+	public async getCompaniesCount() {
+		const count = await prisma.company.count({
+			where: {
+				archive: false,
+			},
+		});
+		return (count);
+	}
 }

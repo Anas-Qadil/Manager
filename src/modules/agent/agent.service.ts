@@ -62,7 +62,6 @@ export default class GuestService {
         guest
       };
     } catch (e: any) {
-      console.log(e);
       return ({
         errorCode: e.code,
         guest: null

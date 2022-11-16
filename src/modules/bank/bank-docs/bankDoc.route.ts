@@ -1,4 +1,4 @@
-import express, { Request, Response, NextFunction } from 'express';
+import express from 'express';
 import controller from './bankDoc.controller';
 import middleware from './bankDoc.middleware';
 import asyncHandler from 'express-async-handler';

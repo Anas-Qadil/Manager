@@ -31,7 +31,6 @@ const updatePermission = (req: Request, res: Response, next: NextFunction) => {
 
 const deletePermission = (req: Request, res: Response, next: NextFunction) => {
   try {
-    console.log("deletePermission");
     next();
   } catch (e) {
     res.status(500).send({

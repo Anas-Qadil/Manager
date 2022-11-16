@@ -6,7 +6,8 @@ const getBankAccounts = async (req: Request, res: Response, next: NextFunction) 
 	const page = req.query.page ? parseInt(req.query.page as string) : 1;
 	const limit = req.query.limit ? parseInt(req.query.limit as string) : 6;
 	const bankAccounts = await new BankAccountService().getBankAccounts(page, limit);
-	res.status(200).send({ data: bankAccounts });
+	const count = await new BankAccountService().getBankAccountsCount();
+	res.status(200).send({ data: bankAccounts, count });
 	next();
 }
 
