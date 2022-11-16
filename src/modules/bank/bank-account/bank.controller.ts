@@ -21,14 +21,14 @@ const getBankAccountByID = async (req: Request, res: Response, next: NextFunctio
 
 const createBankAccount = async (req: Request, res: Response, next: NextFunction) => {
 	const bankAccount = await new BankAccountService().createBankAccount(req.body);
-	if (!bankAccount) throw new ResourceNotCreatedError("something went wrong while creating Bank Account");
+	if (!bankAccount) throw new ResourceNotCreatedError("bank account not created");
 	res.status(201).send({ data: bankAccount });
 	next();
 }
 
 const updateBankAccount = async (req: Request, res: Response, next: NextFunction) => {
 	const updateBankAccount = await new BankAccountService().updateBankAccount(req.params.id, req.body);
-	if (!updateBankAccount) throw new ResourceNotUpdatedError("something went wrong while updating Bank Account");
+	if (!updateBankAccount) throw new ResourceNotUpdatedError("bank account not updated");
 	res.status(200).send({ data: updateBankAccount });
 	next();
 }
@@ -36,7 +36,7 @@ const updateBankAccount = async (req: Request, res: Response, next: NextFunction
 const deleteBankAccount = async (req: Request, res: Response, next: NextFunction) => {
 	if (!req.params.id) throw new PropertyRequiredError("id is required");
 	const deleteBankAccount = await new BankAccountService().deleteBankAccount(req.params.id);
-	if (!deleteBankAccount) throw new ResourceNotDeletedError("something went wrong while deleting Bank Account");
+	if (!deleteBankAccount) throw new ResourceNotDeletedError("bank account not deleted");
 	res.status(200).send({ data: deleteBankAccount });
 	next();
 }

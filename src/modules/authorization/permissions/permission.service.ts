@@ -4,7 +4,6 @@ import { IPermission } from '../../../commen/interfaces'
 export class PermissionsService {
 	public async getPermissionByID(id: string) {
     try {
-      if (!id) return null;
       return await prisma.agentPermissions.findUnique({
         where: {
           id: id,
@@ -17,7 +16,6 @@ export class PermissionsService {
 
   public async getUserPermissions(id: string) {
     try {
-      if (!id) return null;
       const data: any = await prisma.backOfficeRoles.findFirst({
         where: {
           guestID : id,
@@ -61,7 +59,6 @@ export class PermissionsService {
 
   public async updatePermission(id: string, data: IPermission) {
     try {
-      if (!id) return null;
       const archived = await prisma.agentPermissions.update({
         where: {
           id: id,
@@ -85,7 +82,6 @@ export class PermissionsService {
 
   public async deletePermission(id: string) {
     try {
-      if (!id) return null;
       return await prisma.agentPermissions.update({
         where: {
           id: id,

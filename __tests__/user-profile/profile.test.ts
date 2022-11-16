@@ -16,6 +16,14 @@ beforeAll(async () => {
   token = res.body.token;
 });
 
+const randomMongoID = () => {
+	const timestamp = ((new Date().getTime() / 1000) | 0).toString(16);
+	return timestamp + "xxxxxxxxxxxxxxxx".replace(/[x]/g, () => {
+		return ((Math.random() * 16) | 0).toString(16);
+	}).toLowerCase();
+}
+
+
 const fakeProfileData = {
 	"fullName": "unit test",
 	"ref": "unit test",
@@ -28,10 +36,10 @@ const fakeProfileData = {
 	"city": "Jakarta",
 	"address": "Jl. Jalan",
 	"imageUrl": "https://www.w3schools.com/howto/img_avatar.png",
-	"agentID": "6372246a959e42539c7328a" + (Math.floor(Math.random() * 5) + 1).toString(),
+	"userID": randomMongoID()
 }
 
-// POST: /api/v1/profile
+// POST: /api/v1/user-profile
 describe("POST: /api/v1/user-profile", () => {
 	it("should return 201", async () => {
 		const res = await request(server)
