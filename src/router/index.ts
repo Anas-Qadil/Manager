@@ -11,6 +11,9 @@ import userProfile from "../modules/userProfile/profile.route";
 import company from "../modules/company/company.route";
 import bankAccount from "../modules/bank/bank-account/bank.route";
 import bankDoc from "../modules/bank/bank-docs/bankDoc.route";
+import inscriptionDocs from "../modules/inscription-docs/iDocs.route";
+import account from "../modules/account/account.route";
+import user from "../modules/user/user.route";
 
 const passportJWTSignIn    = passport.authenticate("jwt", { session: false });
 const router = express.Router();
@@ -42,6 +45,15 @@ router.use("/api/v1/bank-docs", bankDoc, log);
 
 // handle all bank account related routes
 router.use("/api/v1/bank-account", bankAccount, log);
+
+// handle all inscription docs related routes
+router.use("/api/v1/inscription-docs", inscriptionDocs, log);
+
+// handle all account related routes
+router.use("/api/v1/account", account, log);
+
+// handle all user related routes
+router.use("/api/v1/user", user, log);
 
 // error handling middleware
 router.use((_, res) => {

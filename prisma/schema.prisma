@@ -29,6 +29,7 @@ model agents {
   bankAccounts bankAccount[]
   bankDocs     bankDoc[]
   companies    Company[]
+  documents    inscriptionDocs[]
 
   @@map("agents")
 }
@@ -161,6 +162,36 @@ enum log_level {
   SUCCESS
 }
 
+model inscriptionDocs {
+  id      String  @id @default(auto()) @map("_id") @db.ObjectId
+  archive Boolean @default(false)
+  url     String
+  type    String
+  status  String  @default("pending")
+  motif   String?
+  comment String?
+
+  agentID String? @db.ObjectId
+  agent   agents? @relation(fields: [agentID], references: [id])
+
+  accountID String? @db.ObjectId
+  account   Account? @relation(fields: [accountID], references: [id])
+
+  createdAt DateTime? @default(now())
+  updatedAt DateTime? @updatedAt
+
+  @@map("inscription_docs")
+}
+
+model Account {
+  id        String  @id @default(auto()) @map("_id") @db.ObjectId
+  archive   Boolean @default(false)
+  // @TODO: add account fields and implement middlewares, remove this comment 
+  
+  docs inscriptionDocs[]
+  @@map("accounts")
+}
+
 // -------------------------- Web Client Schemas -------------------------- //
 
 model User {
@@ -174,8 +205,7 @@ model User {
   activated   Boolean   @default(false)
   activatedAt DateTime?
 
-  archived   Boolean   @default(false)
-  archivedAt DateTime?
+  archive   Boolean   @default(false)
 
   emailVerifiedAt DateTime?
   phoneVerifiedAt DateTime?
